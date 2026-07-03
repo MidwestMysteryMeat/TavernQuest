@@ -25,7 +25,12 @@ love .              # from this directory
 lovec .
 ```
 
-The NPC chatbot has an optional Python backend (`chatbot/`) that the game auto-detects via file IPC; without it, the bundled Lua fallback engine runs. See `SETUP_INSTRUCTIONS.md` and the 60+ design/lore docs at the repo root (`GAME_FEATURES.md` and `FEATURE_AUDIT.md` are the best maps).
+> **Note:** no art or audio is bundled (see the licensing section below) — the
+> game boots and plays with placeholder visuals and silence. Supply your own
+> sprites per `ASSETS_README.md` to restore full graphics.
+
+
+The NPC chatbot has an optional Python backend (`chatbot/`) that the game auto-detects via file IPC; without it, the bundled Lua fallback engine runs. See `docs/SETUP_INSTRUCTIONS.md` and the 60+ design/lore docs in `docs/` (`docs/GAME_FEATURES.md` and `docs/FEATURE_AUDIT.md` are the best maps).
 
 ## Screenshots
 
