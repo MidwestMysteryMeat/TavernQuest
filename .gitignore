@@ -44,3 +44,8 @@ __pycache__/
 *.aiff
 *.xm
 *.mod
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
