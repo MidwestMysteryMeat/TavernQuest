@@ -1,3 +1,6 @@
+-- NOTE: art/audio are NOT in the repo — owner-licensed packs stripped from
+-- version control (see assets/ASSETS_PLACEHOLDER.md). Loaders must tolerate
+-- missing files on fresh clones.
 -- UI Assets Module - Loads and provides UI graphics
 local UIAssets = {}
 
