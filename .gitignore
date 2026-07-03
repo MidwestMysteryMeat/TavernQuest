@@ -24,3 +24,18 @@ savegames/
 .env
 __pycache__/
 *.pyc
+
+# --- Licensed art/audio: stripped from the repo (owner-licensed packs) ---
+# See ASSETS_PLACEHOLDER.md in asset folders. Files live only on the dev machine.
+*.ogg
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bmp
+*.tga

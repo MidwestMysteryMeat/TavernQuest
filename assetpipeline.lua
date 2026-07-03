@@ -1,3 +1,6 @@
+-- NOTE: art/audio are NOT in the repo — owner-licensed packs stripped from
+-- version control (see assets/ASSETS_PLACEHOLDER.md). Loaders must tolerate
+-- missing files on fresh clones.
 -- Asset Pipeline (consolidated module)
 -- Combines: assetconfig.lua, assetloader.lua, assetscanner.lua
 -- These three files form one logical system for asset configuration, loading, and scanning.

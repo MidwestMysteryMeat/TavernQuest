@@ -42,3 +42,12 @@ Developed with AI assistance — **Anthropic Claude** (Claude Code) for implemen
 ## License
 
 MIT for the original code — see [LICENSE](LICENSE). **Art/audio assets under `assets/` are third-party** (LPC sprite sets, tilesets, music packs) and retain their own licenses — several are CC-BY/GPL and require attribution; see the `CREDITS.txt`, `Attribution.txt`, and `LICENSE-*.txt` files bundled alongside each asset pack before redistributing.
+
+## Art & audio licensing
+
+This repo intentionally contains **no art or audio**. Those assets are
+purchased packs licensed to the project owner only and are stripped from
+version control (see `assets/ASSETS_PLACEHOLDER.md` and
+`CardsImages/ASSETS_PLACEHOLDER.md`). The code expects them at their
+original paths on the owner's machine; fresh clones run with
+placeholders/silence where the engine allows.
