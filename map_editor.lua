@@ -4,6 +4,8 @@
 local MapEditor = {}
 local Data = require("rpg_data")
 local RpgDungeon = require("rpg_dungeon")
+-- LOVE ships utf8 as a module, not a global — the backspace handler below needs it.
+local utf8 = require("utf8")
 
 -- Cached fonts
 local fontSmall = nil
