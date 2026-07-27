@@ -29,7 +29,6 @@ lovec .
 > game boots and plays with placeholder visuals and silence. Supply your own
 > sprites per `ASSETS_README.md` to restore full graphics.
 
-
 The NPC chatbot has an optional Python backend (`chatbot/`) that the game auto-detects via file IPC; without it, the bundled Lua fallback engine runs. See `docs/SETUP_INSTRUCTIONS.md` and the 60+ design/lore docs in `docs/` (`docs/GAME_FEATURES.md` and `docs/FEATURE_AUDIT.md` are the best maps).
 
 ## Screenshots
@@ -60,5 +59,3 @@ placeholders/silence where the engine allows.
 ---
 
 <sub>Support development — <a href="https://ko-fi.com/midwestmysterymeat">Ko-fi</a></sub>
-
-<img src=".github/donation-qrcode.png" width="120" alt="Donation QR code">
