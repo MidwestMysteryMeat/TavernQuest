@@ -277,7 +277,7 @@ end
 M.getDetectionDescription = function()
     if not state.player then return "Unknown", 1.0 end
 
-    local detection = calculateDetectionChance()
+    local detection = M.calculateDetectionChance()
     local percent = math.floor(detection * 100)
 
     local desc
@@ -310,7 +310,7 @@ M.toggleStealthMode = function()
 
     if state.player.stealthMode then
         log("\xF0\x9F\x8C\x91 Stealth mode ENABLED. Moving carefully...", {0.6, 0.6, 0.8})
-        local desc, detection = getDetectionDescription()
+        local desc, detection = M.getDetectionDescription()
         log("Detection chance: " .. math.floor(detection * 100) .. "% (" .. desc .. ")", {0.7, 0.7, 0.9})
     else
         log("\xF0\x9F\x8C\x9E Stealth mode DISABLED. Moving normally.", {0.8, 0.8, 0.8})
@@ -319,7 +319,7 @@ end
 
 -- Check if player is detected during action
 M.checkDetection = function(action)
-    local detection = calculateDetectionChance(action)
+    local detection = M.calculateDetectionChance(action)
     local roll = math.random()
 
     -- Debug info in stealth mode
@@ -418,26 +418,26 @@ M.commitCrime = function(crimeType)
     end
 
     -- Lose reputation with lawful factions
-    changeFactionRep("holy_dominion", crime.karma)
-    changeFactionRep("dwarven_kingdom", crime.karma)
-    changeFactionRep("gnomish_republic", crime.karma)
+    M.changeFactionRep("holy_dominion", crime.karma)
+    M.changeFactionRep("dwarven_kingdom", crime.karma)
+    M.changeFactionRep("gnomish_republic", crime.karma)
 
     -- Gain reputation with crime organizations
     if crime.karma <= -10 then
-        changeFactionRep("thieves_guild", math.abs(crime.karma) * 0.5)
+        M.changeFactionRep("thieves_guild", math.abs(crime.karma) * 0.5)
         if crime.karma <= -20 then
-            changeFactionRep("assassins_guild", math.abs(crime.karma) * 0.3)
+            M.changeFactionRep("assassins_guild", math.abs(crime.karma) * 0.3)
         end
     end
 
     -- Check for guard response using stealth system
     if state.currentTown and state.player.bounty > 50 then
         -- Use stealth detection instead of simple bounty check
-        local detected = checkDetection(crimeType)
+        local detected = M.checkDetection(crimeType)
 
         if detected then
             log("The guards have spotted you!", {0.9, 0.3, 0.3})
-            arrestPlayer()
+            M.arrestPlayer()
         else
             -- Crime committed but not caught!
             if state.player.stealthMode then
@@ -534,7 +534,7 @@ M.attemptJailEscape = function()
         state.player.karma = math.max(-100, state.player.karma - 20)  -- Escaping is a crime
         state.player.bounty = state.player.bounty * 2  -- Double bounty for escaping
         state.phase = "town"
-        commitCrime("trespassing")  -- Escaping counts as trespassing
+        M.commitCrime("trespassing")  -- Escaping counts as trespassing
     else
         log("Escape failed! Jail time increased.", {0.9, 0.3, 0.3})
         state.player.jailTimeRemaining = math.floor(state.player.jailTimeRemaining * 1.5)
@@ -558,8 +558,8 @@ M.changeFactionRep = function(factionId, amount)
 
     local faction = FACTIONS[factionId]
     if faction then
-        local oldLevel = getReputationLevel(currentRep)
-        local newLevel = getReputationLevel(newRep)
+        local oldLevel = F.getReputationLevel(currentRep)
+        local newLevel = F.getReputationLevel(newRep)
 
         if oldLevel.name ~= newLevel.name then
             log("Reputation with " .. faction.name .. " changed to " .. newLevel.name, newLevel.color)
@@ -569,12 +569,12 @@ M.changeFactionRep = function(factionId, amount)
     -- Update allied/enemy factions
     if faction and faction.allies then
         for _, allyId in ipairs(faction.allies) do
-            changeFactionRep(allyId, amount * 0.5)  -- Allies get 50% of rep change
+            M.changeFactionRep(allyId, amount * 0.5)  -- Allies get 50% of rep change
         end
     end
     if faction and faction.enemies then
         for _, enemyId in ipairs(faction.enemies) do
-            changeFactionRep(enemyId, -amount * 0.75)  -- Enemies get opposite rep
+            M.changeFactionRep(enemyId, -amount * 0.75)  -- Enemies get opposite rep
         end
     end
 end
@@ -624,7 +624,7 @@ M.joinFaction = function(factionId)
 
     -- Join the faction
     table.insert(state.player.joinedFactions, factionId)
-    changeFactionRep(factionId, 30)  -- Start with Friendly status
+    M.changeFactionRep(factionId, 30)  -- Start with Friendly status
     log("You have joined " .. faction.name .. "!", {0.3, 0.9, 0.3})
 
     return true
