@@ -49,3 +49,9 @@ __pycache__/
 *.rar
 *.tar
 *.gz
+*.xcf
+*.tsx
+*.tmx
+*.ttf
+*.otf
+__MACOSX/
