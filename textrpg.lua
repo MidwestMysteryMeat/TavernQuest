@@ -24,7 +24,6 @@ local TownNPCsVisible = require("townnpcsvisible")
 local TownGen = require("towngen")
 local PrisonEscape = require("prison_escape")
 local Cutscenes = require("cutscenes")
-local InteractiveTutorial = require("interactivetutorial")
 local StealthSystem = nil
 pcall(function() StealthSystem = require("stealth_system") end)
 local LuminaryPatrols = require("luminarypatrols")
@@ -382,7 +381,6 @@ rpg_input.register({
     AutoTravel       = AutoTravel,
     AutoPlay         = AutoPlay,
     Cutscenes        = Cutscenes,
-    InteractiveTutorial = InteractiveTutorial,
     LPCLoader        = LPCLoader,
     LPCTilemap       = LPCTilemap,
     TownNPCsVisible  = TownNPCsVisible,

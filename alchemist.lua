@@ -10,8 +10,6 @@ local Progression = require("progression")
 local Employees = require("employees")
 local EmployeeUI = require("employee_ui")
 local UpgradeSystem = require("upgradesystem")
-local Tutorials = require("tutorials")
-local InteractiveTutorial = require("interactivetutorial")
 
 -- Use UI library fonts
 local function getFont(size)
@@ -345,13 +343,6 @@ function Alchemist.init()
     -- Initialize UI components
     initializeUIComponents()
 
-    -- Register UI region resolver for interactive tutorials
-    InteractiveTutorial.registerRegionResolver("alchemist", Alchemist.getUIRegion)
-
-    -- Start tutorial if not completed
-    if not Tutorials.hasCompleted("alchemist") then
-        Tutorials.startTutorial("alchemist")
-    end
 end
 
 -- Load saved alchemist data
@@ -399,8 +390,6 @@ end
 function Alchemist.update(dt)
     if not state.active then return end
 
-    -- Update tutorial
-    Tutorials.update(dt)
 
     -- Update notification timer
     if state.notification then
@@ -1638,19 +1627,11 @@ function Alchemist.draw()
 
     UIAssets.drawTooltip()
 
-    -- Draw tutorial overlay
-    Tutorials.draw()
 end
 
 -- Handle mouse press
 function Alchemist.mousepressed(x, y, button)
     if button ~= 1 then return end
-
-    -- Handle tutorial clicks first
-    if Tutorials.isActive() then
-        Tutorials.mousepressed(x, y, button)
-        return
-    end
 
     local screenW, screenH = love.graphics.getDimensions()
 
@@ -1720,12 +1701,6 @@ end
 
 -- Handle key press
 function Alchemist.keypressed(key)
-    -- Handle tutorial keypresses first
-    if Tutorials.isActive() then
-        Tutorials.keypressed(key)
-        return
-    end
-
     -- Phase-specific controls
     if key == "space" then
         if state.brewPhase == "prep" then

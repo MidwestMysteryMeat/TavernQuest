@@ -10,8 +10,6 @@ local Progression = require("progression")
 local Employees = require("employees")
 local EmployeeUI = require("employee_ui")
 local UpgradeSystem = require("upgradesystem")
-local Tutorials = require("tutorials")
-local InteractiveTutorial = require("interactivetutorial")
 
 -- Game state
 local state = {
@@ -245,13 +243,6 @@ function WizardTower.init()
     -- Initialize UI components
     initUIComponents()
 
-    -- Register region resolver for tutorial system
-    InteractiveTutorial.registerRegionResolver("wizardtower", WizardTower.getUIRegion)
-
-    -- Start tutorial if not completed
-    if not Tutorials.hasCompleted("wizardtower") then
-        Tutorials.startTutorial("wizardtower")
-    end
 end
 
 -- Load saved wizard tower data
@@ -299,8 +290,6 @@ end
 function WizardTower.update(dt)
     if not state.active then return end
 
-    -- Update tutorial
-    Tutorials.update(dt)
 
     -- Update notification timer
     if state.notification then
@@ -766,8 +755,6 @@ function WizardTower.draw()
 
     UIAssets.drawTooltip()
 
-    -- Draw tutorial overlay
-    Tutorials.draw()
 
     -- Reset color
     love.graphics.setColor(1, 1, 1, 1)
@@ -776,12 +763,6 @@ end
 -- Handle mouse press
 function WizardTower.mousepressed(x, y, button)
     if button ~= 1 then return end
-
-    -- Handle tutorial clicks first
-    if Tutorials.isActive() then
-        Tutorials.mousepressed(x, y, button)
-        return
-    end
 
     local screenW, screenH = love.graphics.getDimensions()
 
@@ -849,12 +830,6 @@ end
 
 -- Handle key press
 function WizardTower.keypressed(key)
-    -- Handle tutorial keypresses first
-    if Tutorials.isActive() then
-        Tutorials.keypressed(key)
-        return
-    end
-
     if key == "space" then
         WizardTower.channelMana()
     elseif key == "b" then

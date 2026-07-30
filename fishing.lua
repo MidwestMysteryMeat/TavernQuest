@@ -5,8 +5,6 @@ local Fishing = {}
 local UIAssets = require("uiassets")
 local Progression = require("progression")
 local Backpack = require("backpack")
-local Tutorials = require("tutorials")
-local InteractiveTutorial = require("interactivetutorial")
 local UI = require("ui")
 
 -- Font cache - now using UI library
@@ -406,14 +404,6 @@ function Fishing.init()
 
     -- Calculate initial passive income rate
     updateFishingPassiveIncome()
-
-    -- Register UI region resolver for interactive tutorials
-    InteractiveTutorial.registerRegionResolver("fishing", Fishing.getUIRegion)
-
-    -- Check if tutorial should start
-    if not Tutorials.hasCompleted("fishing") then
-        Tutorials.startTutorial("fishing")
-    end
 
     -- Initialize UI components
     initializeBottomButtons()
@@ -927,8 +917,6 @@ end
 function Fishing.update(dt)
     if not state.active then return end
 
-    -- Update tutorial
-    Tutorials.update(dt)
 
     -- Update UI components
     for _, btn in ipairs(state.ui.bottomButtons) do
@@ -1026,7 +1014,7 @@ function Fishing.update(dt)
     end
 
     -- Don't update gameplay if shop/collection is open or tutorial is active
-    if state.showShop or state.showCollection or state.showEmployees or Tutorials.isActive() then
+    if state.showShop or state.showCollection or state.showEmployees then
         return
     end
 
@@ -2113,8 +2101,6 @@ function Fishing.draw()
         drawEmployeesOverlay(screenW, screenH, mx, my)
     end
 
-    -- Draw tutorial (on top of everything)
-    Tutorials.draw()
 
     -- End screen shake transform
     love.graphics.pop()
@@ -2839,12 +2825,6 @@ end
 function Fishing.mousepressed(x, y, button)
     if button ~= 1 then return end
 
-    -- Handle tutorial clicks first
-    if Tutorials.isActive() then
-        Tutorials.mousepressed(x, y, button)
-        return
-    end
-
     -- Handle UI overlay clicks
     if state.showShop and state.ui.shopPanel then
         if state.ui.shopPanel:mousepressed(x, y, button) then return end
@@ -2946,12 +2926,6 @@ end
 
 -- Handle key press
 function Fishing.keypressed(key)
-    -- Handle tutorial keys first
-    if Tutorials.isActive() then
-        Tutorials.keypressed(key)
-        return
-    end
-
     if state.showShop or state.showCollection or state.showEmployees then
         if key == "escape" or key == "tab" or key == "c" or key == "e" then
             state.showShop = false
@@ -3032,15 +3006,11 @@ function Fishing.keypressed(key)
         state.active = false
         return "menu"
     elseif key == "t" then
-        -- Restart tutorial
-        Tutorials.resetTutorial("fishing")
-        Tutorials.startTutorial("fishing")
     end
 end
 
 -- Handle key release
 function Fishing.keyreleased(key)
-    if Tutorials.isActive() then return end
 
     if key == "space" then
         state.spaceHeld = false

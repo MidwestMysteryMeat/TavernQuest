@@ -7,7 +7,6 @@ local Credits = require("credits")
 local StatsPage = require("statspage")
 local TextRPG = require("textrpg")
 local Lore = require("lore")
-local Tutorial = require("tutorial_menu")
 local Fishing = require("fishing")
 local Forge = require("forge")
 local Hunting = require("hunting")
@@ -18,8 +17,6 @@ local Backpack = require("backpack")
 local PauseMenu = require("pausemenu")
 local Cutscenes = require("cutscenes")
 local UI = require("ui")
-local InteractiveTutorial = require("interactivetutorial")
-local KnowledgeCenter = require("knowledgecenter")
 
 -- Sprite rendering systems
 local LPCLoader = require("lpcloader")
@@ -35,7 +32,6 @@ local stateModules = {
     statspage = StatsPage,
     textrpg = TextRPG,
     lore = Lore,
-    tutorial = Tutorial,
     fishing = Fishing,
     forge = Forge,
     hunting = Hunting,
@@ -429,14 +425,6 @@ function love.update(dt)
     -- Update cutscene typewriter effect (runs even when paused for visual polish)
     Cutscenes.update(dt)
 
-    -- Update interactive tutorial overlay (runs alongside game)
-    InteractiveTutorial.update(dt)
-
-    -- Update Knowledge Center if active
-    if KnowledgeCenter.isActive() then
-        KnowledgeCenter.update(dt)
-    end
-
     -- Skip game updates when paused
     if PauseMenu.isActive() then
         PauseMenu.update(dt)
@@ -460,16 +448,8 @@ function love.draw()
     -- Draw cutscene overlay (on top of everything except pause menu)
     Cutscenes.draw()
 
-    -- Draw interactive tutorial overlay (on top of game, under pause menu)
-    InteractiveTutorial.draw()
-
     -- Draw pause menu overlay (always on top)
     PauseMenu.draw()
-
-    -- Draw Knowledge Center overlay (on top of everything)
-    if KnowledgeCenter.isActive() then
-        KnowledgeCenter.draw()
-    end
 
     -- Draw UI overlays (toasts and tooltips always on top)
     UI.Toast.draw()
@@ -494,20 +474,6 @@ function love.keypressed(key)
         return
     end
 
-    -- Knowledge Center hotkey [K] - global access (except when typing in text fields)
-    if key == "k" and not KnowledgeCenter.isActive() and GameState.current ~= "menu" then
-        if not PauseMenu.isActive() and not Cutscenes.isActive() then
-            KnowledgeCenter.init()
-            return
-        end
-    end
-
-    -- Knowledge Center takes priority when active
-    if KnowledgeCenter.isActive() then
-        KnowledgeCenter.keypressed(key)
-        return
-    end
-
     -- Cutscene input takes priority (except pause menu)
     if Cutscenes.isActive() and not PauseMenu.isActive() then
         if key == "escape" then
@@ -517,13 +483,6 @@ function love.keypressed(key)
         end
         Cutscenes.keypressed(key)
         return
-    end
-
-    -- Interactive tutorial takes priority over game input
-    if InteractiveTutorial.isActive() then
-        if InteractiveTutorial.keypressed(key) then
-            return
-        end
     end
 
     -- Pause menu takes top priority for ESC key (except on main menu)
@@ -555,11 +514,6 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(x, y, button)
-    -- Knowledge Center intercepts all clicks when active
-    if KnowledgeCenter.isActive() then
-        KnowledgeCenter.mousepressed(x, y, button)
-        return
-    end
     -- Pause menu intercepts all clicks when active
     if PauseMenu.isActive() then
         PauseMenu.mousepressed(x, y, button)
@@ -570,12 +524,6 @@ function love.mousepressed(x, y, button)
         Cutscenes.mousepressed(x, y, button)
         return
     end
-    -- Interactive tutorial intercepts clicks when active
-    if InteractiveTutorial.isActive() then
-        if InteractiveTutorial.mousepressed(x, y, button) then
-            return
-        end
-    end
     local module = stateModules[GameState.current]
     if module and module.mousepressed then
         module.mousepressed(x, y, button)
@@ -584,11 +532,6 @@ end
 
 function love.mousereleased(x, y, button)
     -- Forward mousereleased to all modules that use UI.Button components
-    -- UI.Button requires mousereleased to complete click actions
-    if KnowledgeCenter.isActive() then
-        if KnowledgeCenter.mousereleased then KnowledgeCenter.mousereleased(x, y, button) end
-        return
-    end
     if PauseMenu.isActive() then
         if PauseMenu.mousereleased then PauseMenu.mousereleased(x, y, button) end
         return
@@ -600,13 +543,6 @@ function love.mousereleased(x, y, button)
 end
 
 function love.wheelmoved(x, y)
-    -- Knowledge Center scroll
-    if KnowledgeCenter.isActive() then
-        if KnowledgeCenter.wheelmoved then
-            KnowledgeCenter.wheelmoved(x, y)
-        end
-        return
-    end
     -- Pause menu scroll
     if PauseMenu.isActive() then
         if PauseMenu.wheelmoved then
@@ -622,13 +558,6 @@ function love.wheelmoved(x, y)
 end
 
 function love.textinput(text)
-    -- Knowledge Center text input
-    if KnowledgeCenter.isActive() then
-        if KnowledgeCenter.textinput then
-            KnowledgeCenter.textinput(text)
-        end
-        return
-    end
     -- Forward to current game state
     local module = stateModules[GameState.current]
     if module and module.textinput then

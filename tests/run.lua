@@ -70,7 +70,7 @@ end
 
 --- Every state registered in main.lua must expose the callbacks main.lua calls.
 local STATE_MODULES = {
-    "menu", "credits", "statspage", "textrpg", "lore", "tutorial_menu",
+    "menu", "credits", "statspage", "textrpg", "lore",
     "fishing", "forge", "hunting", "wizardtower", "alchemist",
 }
 
@@ -97,8 +97,8 @@ local SUPPORT_MODULES = {
     "tactical_combat", "stealth_system", "chatbot_fallback", "chatbot_bridge",
     "autoplay", "auto_travel", "lpcloader", "camera2d", "renderer2d",
     "prison_escape",  -- subsystem driven by rpg_core, not a top-level state
-    "spritemanager", "tile_quad_maps", "assetpipeline", "interactivetutorial",
-    "knowledgecenter", "options", "glossary", "kcdata", "employees",
+    "spritemanager", "tile_quad_maps", "assetpipeline",
+    "options", "employees",
 }
 
 local function testSupportModules()
@@ -164,6 +164,8 @@ local function testNoDanglingStateReferences()
             "game", "cards", "jokers", "deckbuilder", "lootbox", "endlessmode",
             "poker_hands", "tradingcards", "collection", "stockmarket",
             "petsim", "cafegame", "map_editor", "storymode",
+            "kcdata", "knowledgecenter", "glossary", "tutorials",
+            "tutorial_menu", "interactivetutorial",
         }
 
         for _, name in ipairs(removedModules) do

@@ -9,8 +9,6 @@ local Backpack = require("backpack")
 local Employees = require("employees")
 local EmployeeUI = require("employee_ui")
 local UpgradeSystem = require("upgradesystem")
-local Tutorials = require("tutorials")
-local InteractiveTutorial = require("interactivetutorial")
 
 -- Game state
 local state = {
@@ -270,13 +268,6 @@ function Hunting.init()
     -- Calculate initial passive income rate
     Hunting.updatePassiveIncomeRate()
 
-    -- Register UI region resolver for interactive tutorials
-    InteractiveTutorial.registerRegionResolver("hunting", Hunting.getUIRegion)
-
-    -- Start tutorial if not completed
-    if not Tutorials.hasCompleted("hunting") then
-        Tutorials.startTutorial("hunting")
-    end
 end
 
 -- Load saved hunting data
@@ -415,8 +406,6 @@ end
 function Hunting.update(dt)
     if not state.active then return end
 
-    -- Update tutorial
-    Tutorials.update(dt)
 
     -- Update UI components
     if state.navButtons.prevArea then
@@ -949,8 +938,6 @@ function Hunting.draw()
         Hunting.drawUpgradePanel(screenW, screenH, mx, my)
     end
 
-    -- Draw tutorial overlay
-    Tutorials.draw()
 end
 
 -- Create shop UI components
@@ -1197,12 +1184,6 @@ end
 
 -- Handle key press
 function Hunting.keypressed(key)
-    -- Handle tutorial keypresses first
-    if Tutorials.isActive() then
-        Tutorials.keypressed(key)
-        return
-    end
-
     if key == "s" then
         state.showShop = not state.showShop
         state.showEmployeePanel = false
@@ -1247,12 +1228,6 @@ end
 -- Handle mouse press
 function Hunting.mousepressed(x, y, button)
     if button ~= 1 then return end
-
-    -- Handle tutorial clicks first
-    if Tutorials.isActive() then
-        Tutorials.mousepressed(x, y, button)
-        return
-    end
 
     local screenW, screenH = love.graphics.getDimensions()
 

@@ -15,7 +15,7 @@ local MapEnemies, DungeonEnemies
 local TacticalCombat, TacticalUI, TacticalAI
 local StealthSystem, PrisonEscape
 local WorldMapOverlay, AutoTravel, AutoPlay
-local Cutscenes, InteractiveTutorial
+local Cutscenes
 local LPCLoader, LPCTilemap
 local TownNPCsVisible, WorldGen, TileUtils
 
@@ -48,7 +48,6 @@ function M.register(deps)
     AutoTravel = deps.AutoTravel or require("auto_travel")
     AutoPlay = deps.AutoPlay or require("autoplay")
     Cutscenes = deps.Cutscenes or require("cutscenes")
-    InteractiveTutorial = deps.InteractiveTutorial or require("interactivetutorial")
     LPCLoader = deps.LPCLoader or require("lpcloader")
     LPCTilemap = deps.LPCTilemap or require("lpc_tilemap")
     TownNPCsVisible = deps.TownNPCsVisible or require("townnpcsvisible")

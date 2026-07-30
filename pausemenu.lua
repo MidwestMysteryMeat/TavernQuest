@@ -6,7 +6,6 @@ local PauseMenu = {}
 local UI = require("ui")
 local Options = require("options")
 local SaveSystem = require("savesystem")
-local KnowledgeCenter = require("knowledgecenter")
 local Backpack = require("backpack")
 local Progression = require("progression")
 
@@ -42,7 +41,6 @@ local uiPanels = {
 -- Button definitions for main pause menu
 local MAIN_BUTTONS = {
     {id = "resume",    label = "Resume Game",     variant = "ghost"},
-    {id = "knowledge", label = "Knowledge Center", variant = "ghost"},
     {id = "settings",  label = "Settings",        variant = "ghost"},
     {id = "save",      label = "Save Game",       variant = "ghost"},
     {id = "load",      label = "Load Game",       variant = "ghost"},
@@ -865,9 +863,6 @@ function PauseMenu.activateButton(btn)
     if not btn then return end
     if btn.id == "resume" then
         PauseMenu.close()
-    elseif btn.id == "knowledge" then
-        PauseMenu.close()
-        KnowledgeCenter.init()
     elseif btn.id == "settings" then
         pauseState.subMenu = "settings"
         PauseMenu.createSettingsControls()

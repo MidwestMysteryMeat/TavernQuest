@@ -9,7 +9,6 @@ local Menu = {}
 local UI = require("ui")
 local Options = require("options")
 local UIAssets = require("uiassets")
-local KnowledgeCenter = require("knowledgecenter")
 local Theme = require("theme")
 
 local colors = Theme.colors
@@ -110,7 +109,6 @@ function Menu.layout()
         side(0, "Lore", "ghost", function() enterState("lore") end),
         side(1, "Options", "ghost", function() Options.openOptions() end),
         side(2, "Credits", "ghost", function() enterState("credits") end),
-        side(3, "Guide", "success", function() KnowledgeCenter.init() end),
 
         UI.Button.new({
             x = 20,

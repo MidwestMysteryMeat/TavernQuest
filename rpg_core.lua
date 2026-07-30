@@ -17,7 +17,6 @@ local MapEnemies = require("mapenemies")
 local DungeonEnemies = require("dungeonenemies")
 local TownNPCsVisible = require("townnpcsvisible")
 local PrisonEscape = require("prison_escape")
-local InteractiveTutorial = require("interactivetutorial")
 local LuminaryPatrols = require("luminarypatrols")
 
 local M = {}
@@ -577,9 +576,6 @@ M.init = function()
         log("Welcome to Tavern Quest!", {0.9, 0.7, 0.2})
         log("Enter your name and choose a class to begin.", {0.7, 0.7, 0.7})
     end
-
-    -- Register UI region resolver for interactive tutorial
-    InteractiveTutorial.registerRegionResolver("textrpg", TextRPG.getUIRegion)
 
     -- Initialize RumorSystem once at startup (not in update loops)
     local RumorSystem = require("rumorsystem")
