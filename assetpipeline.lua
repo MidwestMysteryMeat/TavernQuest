@@ -210,19 +210,6 @@ AssetConfig.creatureElements = {
 -- ============================================
 -- Define evolution chains for pets
 
-AssetConfig.petEvolutions = {
-    -- Format: {base, evolved, final}
-    slime = {"Monsters/Monster_Slime", "Monsters/Monster_Slime", "Monsters/Monster_Elemental"},
-    bird = {"Animals/Bird_animal", "Animals/Hawk_animal", "Monsters/Creatures_07_phoenix"},
-    cat = {"Animals/Cat_animal", "Animals/Cat_animal", "Animals/Creatures_12_Dog"},
-    dog = {"Animals/Creatures_12_Dog", "Animals/Wolf_animal", "Monsters/Creatures_05_werewolf"},
-    dragon = {"Animals/Monsters_09", "Monsters/Creatures_11_Dragon", "Monsters/Creatures_11_Dragon"},
-    fish = {"Monsters/Monster_fish", "Monsters/Monster_fish", "Monsters/Monster_DemonicFish"},
-    wolf = {"Animals/Wolf_animal", "Animals/Wolf_animal", "Monsters/Creatures_05_werewolf"},
-    bear = {"Animals/Bear_animal", "Animals/Bear_animal", "Monsters/Gigant_05_pangolin"},
-    hawk = {"Animals/Hawk_animal", "Animals/Hawk_animal", "Monsters/Creatures_07_phoenix"},
-    bat = {"Animals/Bat", "Animals/Bat", "Monsters/Monster_Eye"},
-}
 
 -- ============================================
 -- NAME POOLS

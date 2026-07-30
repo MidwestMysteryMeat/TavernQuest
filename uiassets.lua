@@ -1348,24 +1348,6 @@ function UIAssets.getCreatureForElement(element)
 end
 
 -- Get pet evolution portraits
-function UIAssets.getPetEvolution(petType)
-    if AssetConfig and AssetConfig.petEvolutions then
-        local evolution = AssetConfig.petEvolutions[petType]
-        if evolution then
-            return {
-                base = evolution[1],
-                evolved = evolution[2],
-                final = evolution[3],
-            }
-        end
-    end
-    -- Fallback
-    return {
-        base = "Animals/Cat_animal",
-        evolved = "Animals/Cat_animal",
-        final = "Monsters/Monster_Elemental",
-    }
-end
 
 -- Scan and report available assets (for debugging)
 function UIAssets.scanAssets()

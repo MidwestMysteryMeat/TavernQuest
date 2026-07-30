@@ -1851,7 +1851,7 @@ end
 local BUILDING_DEFS = {
     -- Core buildings (always present)
     townhall    = {id="townhall",    name="Town Hall",      icon="HALL",  action="elders",            color={0.70,0.60,0.40}, desc="Visit the elders",           category="core"},
-    market      = {id="market",      name="Trading Post",   icon="MKT",   action="stockmarket",       color={0.40,0.50,0.50}, desc="Trade stocks & goods",       category="core", purchasable=true, propertyType="business"},
+    market      = {id="market",      name="Trading Post",   icon="MKT",   action="building_interior",  color={0.40,0.50,0.50}, desc="Trade goods with merchants", category="core", purchasable=true, propertyType="business"},
     tavern      = {id="tavern",      name="Tavern",         icon="TAV",   action="tavern_interior",   color={0.60,0.50,0.30}, desc="Rest, work, & socialize",    category="core"},
 
     -- Common buildings (high chance)
