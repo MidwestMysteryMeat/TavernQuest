@@ -56,3 +56,11 @@ __pycache__/
 *.ttf
 *.otf
 __MACOSX/
+
+# Agent tooling - nothing agent-facing belongs in a public repo.
+.superpowers/
+CLAUDE.md
+AGENTS.md
+launch-claude.bat
+launch-codex.bat
+
