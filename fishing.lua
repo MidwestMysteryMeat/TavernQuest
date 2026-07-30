@@ -1660,6 +1660,10 @@ function Fishing.unlockLocation(locationId)
 end
 
 -- Draw the fishing game
+-- Forward declarations: Fishing.draw dispatches to these overlay renderers
+-- before they are defined below. Without this they resolve as nil globals.
+local drawShopOverlay, drawCollectionOverlay, drawEmployeesOverlay
+
 function Fishing.draw()
     local screenW, screenH = love.graphics.getDimensions()
     local mx, my = love.mouse.getPosition()
@@ -2150,7 +2154,7 @@ function Fishing.draw()
 end
 
 -- Draw shop overlay using UI components
-local function drawShopOverlay(screenW, screenH, mx, my)
+drawShopOverlay = function(screenW, screenH, mx, my)
     -- Overlay background
     love.graphics.setColor(0, 0, 0, 0.8)
     love.graphics.rectangle("fill", 0, 0, screenW, screenH)
@@ -2250,7 +2254,7 @@ local function drawShopOverlay(screenW, screenH, mx, my)
 end
 
 -- Draw collection overlay using UI components
-local function drawCollectionOverlay(screenW, screenH, mx, my)
+drawCollectionOverlay = function(screenW, screenH, mx, my)
     -- Overlay background
     love.graphics.setColor(0, 0, 0, 0.8)
     love.graphics.rectangle("fill", 0, 0, screenW, screenH)
@@ -2336,7 +2340,7 @@ local function drawCollectionOverlay(screenW, screenH, mx, my)
 end
 
 -- Draw employees overlay using UI components
-local function drawEmployeesOverlay(screenW, screenH, mx, my)
+drawEmployeesOverlay = function(screenW, screenH, mx, my)
     -- Overlay background
     love.graphics.setColor(0, 0, 0, 0.8)
     love.graphics.rectangle("fill", 0, 0, screenW, screenH)

@@ -2157,14 +2157,20 @@ M.getNPCQuestIndicator = function(npc)
     end
 
     -- Check if NPC has available quests
+    -- Any quest the player qualifies for wins over one they don't, so the whole
+    -- list has to be scanned -- returning inside both branches only ever
+    -- considered the first quest.
     local availableQuests = F.generateNPCQuests(npc)
+    local hasLockedQuest = false
     for _, questInfo in ipairs(availableQuests) do
-        local meetsReq, reason = F.checkQuestRequirements(questInfo, npc.id)
-        if meetsReq then
+        if F.checkQuestRequirements(questInfo, npc.id) then
             return "❗" -- Quest available
-        else
-            return "?" -- Quest available but requirements not met
         end
+        hasLockedQuest = true
+    end
+
+    if hasLockedQuest then
+        return "?" -- Quest exists but requirements not met
     end
 
     return nil -- No quests

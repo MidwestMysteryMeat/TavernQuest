@@ -733,7 +733,7 @@ function StealthSystem.getTileLightLevel(grid, tileX, tileY, rooms, timeOfDay)
                         local effectiveBrightness = template.brightness
                         -- Windows only during day
                         if template.daytimeOnly then
-                            if not (timeOfDay == "day") then
+                            if timeOfDay ~= "day" then
                                 effectiveBrightness = 0
                             end
                         end

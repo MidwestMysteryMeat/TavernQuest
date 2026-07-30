@@ -538,7 +538,7 @@ M.onNewDay = function(dayNum)
         local anchorTowns = WorldGen.getAnchorTowns()
         if anchorTowns and #anchorTowns > 0 then
             local town = anchorTowns[math.random(#anchorTowns)]
-            if town and not town.type == "capital" then  -- Not in capitals
+            if town and town.type ~= "capital" then  -- Not in capitals
                 RumorSystem.spawnSerialKiller(town.id, town.name, town.position.x, town.position.y)
             end
         end

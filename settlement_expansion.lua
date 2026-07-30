@@ -259,7 +259,9 @@ function SettlementExpansion.isTileEmpty(grid, x, y)
 end
 
 -- Helper: Validate building placement (supports rectangular grids)
-function SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, footprint, buildingType)
+--- Validate that `footprint` fits at grid tile (x, y).
+-- `claimKey` is optional: pass it to also enforce the settlement's building cap.
+function SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, footprint, buildingType, claimKey)
     local width = footprint.width
     local height = footprint.height
     local gw = grid.width or grid.size
@@ -299,8 +301,9 @@ function SettlementExpansion.validateBuildingPlacement(state, PropertySystem, gr
     end
 
     -- Check settlement building limit
-    local settlement = state.player.properties.settlements[x .. "_" .. y] or
-                      state.player.properties.settlements[(claim and claim.x or 0) .. "_" .. (claim and claim.y or 0)]
+    -- Settlements are keyed by claim, so this can only run when the caller
+    -- knows which claim the grid belongs to. `claim` was never in scope here.
+    local settlement = claimKey and state.player.properties.settlements[claimKey]
 
     if settlement then
         local buildingCount = 0
@@ -337,7 +340,7 @@ function SettlementExpansion.placeBuilding(state, PropertySystem, claimKey, buil
     end
 
     -- Validate placement
-    local canPlace, reason = SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, tierData.footprint, buildingType)
+    local canPlace, reason = SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, tierData.footprint, buildingType, claimKey)
     if not canPlace then
         return false, reason
     end

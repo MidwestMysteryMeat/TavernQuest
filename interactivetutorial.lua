@@ -1,5 +1,7 @@
 local InteractiveTutorial = {}
 local Tutorials = require("tutorials")
+local PauseMenu = require("pausemenu")
+local KnowledgeCenter = require("knowledgecenter")
 
 -- Font cache
 local FontCache = require("fontcache")
@@ -309,7 +311,7 @@ function InteractiveTutorial.update(dt)
     if not state.active then return end
 
     -- Check pause state
-    if PauseMenu and PauseMenu.isActive() then
+    if PauseMenu.isActive() then
         state.paused = true
         return
     else
@@ -675,9 +677,7 @@ function InteractiveTutorial.mousepressed(x, y, button)
                 elseif btn.action == "kclink" then
                     if state.stepData.kcLink then
                         -- Open Knowledge Center to entry
-                        if KnowledgeCenter and KnowledgeCenter.openToEntry then
-                            KnowledgeCenter.openToEntry(state.stepData.kcLink)
-                        end
+                        KnowledgeCenter.openToEntry(state.stepData.kcLink)
                     end
                 end
                 return true

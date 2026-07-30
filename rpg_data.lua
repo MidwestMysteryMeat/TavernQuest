@@ -50,14 +50,12 @@ Data.portraitMappings = {
     dog = "Animals/Creatures_12_Dog",
 
     -- === GOBLINS ===
-    goblin = "Goblin/Goblin Males/goblin_01",
     goblin_scout = "Goblin/Goblin Males/goblin_02",
     goblin_shaman = "Goblin/Goblin Males/goblin_03",
     goblin_warrior = "Goblin/Goblin Males/goblin_04",
     goblin_chief = "Goblin/Goblin Males/goblin_05",
 
     -- === ORCS ===
-    orc = "ORC/Men_ORC/Orc_01_warrior",
     orc_warrior = "ORC/Men_ORC/Orc_01_warrior",
     orc_warlord = "ORC/Men_ORC/Orc_02_warlord",
     orc_shaman = "ORC/Men_ORC/Orc_03_shaman",
@@ -100,7 +98,6 @@ Data.portraitMappings = {
     ghoul = "Monsters/Undead/Undead_06_zombie",
     corrupted_peasant = "Monsters/Undead/Undead_06_zombie",
     soul_wisp = "Monsters/Undead/Monster_Ghost",
-    skeleton_mage = "Monster_SkeletonMage",
     wight_captain = "Monsters/Undead/Undead_02_knight",
     bone_golem = "Monsters/Undead/Monster_SkeletonKing",
     specter = "Monsters/Undead/Undead_09_ghost",
@@ -162,9 +159,7 @@ Data.portraitMappings = {
     stone_guard = "StoneGuard",
 
     -- === DWARVES & GNOMES ===
-    dwarf = "Dwarves/Dwarf",
     mad_dwarf = "Dwarves/MadDwarf",
-    gnome = "Gnomes/Male Gnomes/Gnome_02",
     gnome_engineer = "Gnomes/Male Gnomes/Gnome_05",
     gnome_sage = "Gnomes/Male Gnomes/Gnome_06",
 
