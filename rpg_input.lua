@@ -10,13 +10,11 @@ local F
 local TextRPG
 
 -- Module references (set during register)
-local UI, Backpack, PropertySystem
+local Backpack, PropertySystem
 local MapEnemies, DungeonEnemies
 local TacticalCombat, TacticalUI, TacticalAI
 local StealthSystem, PrisonEscape
 local WorldMapOverlay, AutoTravel, AutoPlay
-local Cutscenes
-local LPCLoader, LPCTilemap
 local TownNPCsVisible, WorldGen, TileUtils
 
 -- Data references
@@ -34,7 +32,6 @@ function M.register(deps)
     state = deps.state
     F = deps.F
     TextRPG = deps.TextRPG
-    UI = deps.UI or require("ui")
     Backpack = deps.Backpack or require("backpack")
     PropertySystem = deps.PropertySystem or require("propertysystem")
     MapEnemies = deps.MapEnemies or require("mapenemies")
@@ -47,9 +44,6 @@ function M.register(deps)
     WorldMapOverlay = deps.WorldMapOverlay or require("worldmapoverlay")
     AutoTravel = deps.AutoTravel or require("auto_travel")
     AutoPlay = deps.AutoPlay or require("autoplay")
-    Cutscenes = deps.Cutscenes or require("cutscenes")
-    LPCLoader = deps.LPCLoader or require("lpcloader")
-    LPCTilemap = deps.LPCTilemap or require("lpc_tilemap")
     TownNPCsVisible = deps.TownNPCsVisible or require("townnpcsvisible")
     WorldGen = deps.WorldGen or require("worldgen")
     TileUtils = deps.TileUtils or require("tileutils")
@@ -2632,7 +2626,7 @@ function M.mousepressed(mx, my, button)
                         TacticalCombat.addLog(tacticalState,
                             active.name .. " is now on AUTO.", {0.5, 0.7, 0.3})
                         -- Let AI take over immediately
-                        local TacticalAI = require("tactical_combat_ai")
+                        TacticalAI = TacticalAI or require("tactical_combat_ai")
                         local results = TacticalAI.executeCompanionTurn(tacticalState, active)
                         if results and results.attacked and results.attackResult and results.attackResult.targetDown then
                             if results.target and results.target.isEnemy and results.target.data then
@@ -4151,7 +4145,7 @@ function M.keypressed(key)
                         if active.data then active.data.autoBattle = true end
                         TacticalCombat.addLog(tacticalState,
                             active.name .. " is now on AUTO.", {0.5, 0.7, 0.3})
-                        local TacticalAI = require("tactical_combat_ai")
+                        TacticalAI = TacticalAI or require("tactical_combat_ai")
                         local results = TacticalAI.executeCompanionTurn(tacticalState, active)
                         if results and results.attacked and results.attackResult and results.attackResult.targetDown then
                             if results.target and results.target.isEnemy and results.target.data then
@@ -4969,7 +4963,6 @@ function M.keypressed(key)
         for _, c in ipairs(state.player.party) do
             c.autoBattle = not allAuto
         end
-        local log = F and F.log or function() end
         log("Auto Party: " .. (not allAuto and "ON" or "OFF"), {0.5, 0.9, 0.5})
     end
 

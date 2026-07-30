@@ -423,9 +423,8 @@ function StealthSystem.calculateDetection(params)
     end
 
     -- 4. Equipment modifier
-    local equipMod = 1.0
     local equipBonus = params.equipmentMod or 0
-    equipMod = 1.0 - equipBonus
+    local equipMod = 1.0 - equipBonus
     if equipBonus ~= 0 then
         table.insert(breakdown, {
             name = "Equipment",
@@ -516,12 +515,11 @@ function StealthSystem.calculateDetection(params)
     end
 
     -- 6. Stat-based modifier: player stealth vs enemy perception
-    local statMod = 1.0
     local playerStealth = params.playerStealth or 10
     local enemyPerception = params.enemyPerception or 10
     local statDiff = playerStealth - enemyPerception
     -- Each point of difference = ~2% detection change
-    statMod = math.max(0.2, math.min(2.0, 1.0 - (statDiff * 0.02)))
+    local statMod = math.max(0.2, math.min(2.0, 1.0 - (statDiff * 0.02)))
     table.insert(breakdown, {
         name = "Stealth vs Perception",
         value = statMod,

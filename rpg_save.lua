@@ -13,8 +13,6 @@ local PropertySystem = require("propertysystem")
 -- Upvalues set by register()
 local state           -- module-level state table from textrpg
 local F               -- helper function table from textrpg (contains countExploredTiles, getStatModifier, calculateStats, checkAllRaceUnlocks, exitDungeon, cancelTravelingHome, cancelPaidTravel)
-local TextRPG         -- reference to main TextRPG table
-local graveyard       -- graveyard table from textrpg
 local CLASS_BASE_STATS -- class base stats table from textrpg
 local log             -- log function from textrpg (local log = function(text, color) ...)
 
@@ -29,8 +27,6 @@ local log             -- log function from textrpg (local log = function(text, c
 function M.register(s, f, rpg, gy, cbs, logFn)
     state = s
     F = f
-    TextRPG = rpg
-    graveyard = gy
     CLASS_BASE_STATS = cbs
     log = logFn
 end

@@ -19,7 +19,6 @@ local RACES
 local UNLOCKABLE_RACES
 local BACKGROUNDS
 local CLASS_BASE_STATS
-local STAT_DEFINITIONS
 local ASCENSION_CONFIG
 local ASCENSION_TREE
 local SPECIALIZATIONS
@@ -60,7 +59,6 @@ function M.register(s, f, deps)
     UNLOCKABLE_RACES     = deps.UNLOCKABLE_RACES
     BACKGROUNDS          = deps.BACKGROUNDS
     CLASS_BASE_STATS     = deps.CLASS_BASE_STATS
-    STAT_DEFINITIONS     = deps.STAT_DEFINITIONS
     ASCENSION_CONFIG     = deps.ASCENSION_CONFIG
     ASCENSION_TREE       = deps.ASCENSION_TREE
     SPECIALIZATIONS      = deps.SPECIALIZATIONS
@@ -215,7 +213,6 @@ end
 
 -- Get derived combat stats from attributes
 M.getDerivedStats = function(stats, level)
-    level = level or 1
     local derived = {
         -- From MIGHT
         meleeDamageBonus = getStatModifier(stats.MIGHT or 10) * 2,

@@ -20,7 +20,6 @@ end
 local generateEncounterFn = nil
 local createEnemyInstanceFn = nil
 local startCombatFn = nil
-local getTileTypeFn = nil
 local getEnemiesTableFn = nil
 
 -- ============================================================================
@@ -229,7 +228,6 @@ function MapEnemies.init(gameState, callbacks)
         generateEncounterFn = callbacks.generateEncounter
         createEnemyInstanceFn = callbacks.createEnemyInstance
         startCombatFn = callbacks.startCombat
-        getTileTypeFn = callbacks.getTileType
         getEnemiesTableFn = callbacks.getEnemiesTable
     end
     WorldGen = require("worldgen")

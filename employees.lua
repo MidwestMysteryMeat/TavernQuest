@@ -236,7 +236,7 @@ function Employees.generateEmployee(typeId)
     local fullName = firstName .. " " .. lastName
 
     -- Random age based on profession level
-    local minAge, maxAge = 18, 60
+    local minAge, maxAge
     if empType.id:find("master") or empType.id:find("archmage") then
         minAge, maxAge = 35, 70  -- Masters are older
     elseif empType.id:find("journeyman") or empType.id:find("skilled") then
@@ -265,7 +265,7 @@ function Employees.generateEmployee(typeId)
     entity.skillVariance = 0.8 + math.random() * 0.4
 
     -- Employee level based on type (apprentice = 1-3, journeyman = 4-7, master = 8-12)
-    local baseLevel = 1
+    local baseLevel
     if empType.id:find("master") or empType.id:find("archmage") then
         baseLevel = 8 + math.random(0, 4)  -- Level 8-12
     elseif empType.id:find("journeyman") or empType.id:find("skilled") then

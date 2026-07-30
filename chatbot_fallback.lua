@@ -12,7 +12,6 @@ local M = {}
 -- ============================================================================
 
 local profiles = {}           -- keyed by npc_type string
-local synonymGroups = {}      -- synonym group name -> list of words
 local synonymLookup = {}      -- word -> list of group names it belongs to
 local insults = {}            -- set: word -> true
 local contractions = {}       -- contraction -> expansion
@@ -167,7 +166,6 @@ end
 
 function M.init()
     profiles = {}
-    synonymGroups = {}
     synonymLookup = {}
     insults = {}
     contractions = {}
@@ -201,7 +199,6 @@ function M.init()
     -- Load synonyms
     local synData = readJSONFile("chatbot/data/synonyms.json")
     if synData then
-        synonymGroups = synData
         -- Build reverse lookup: word -> set of group names
         for groupName, words in pairs(synData) do
             for _, word in ipairs(words) do

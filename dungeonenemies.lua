@@ -13,8 +13,6 @@ end
 
 -- External callbacks (set via init)
 local startCombatFn = nil
-local createEnemyInstanceFn = nil
-local getEnemiesTableFn = nil
 
 -- ============================================================================
 --                              CONFIGURATION
@@ -89,8 +87,6 @@ function DungeonEnemies.init(gameState, callbacks)
     state = gameState
     if callbacks then
         startCombatFn = callbacks.startCombat
-        createEnemyInstanceFn = callbacks.createEnemyInstance
-        getEnemiesTableFn = callbacks.getEnemiesTable
     end
 end
 

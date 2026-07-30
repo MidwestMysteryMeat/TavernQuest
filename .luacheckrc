@@ -25,6 +25,7 @@ globals = {
     "AudioSystem",      -- music/SFX playback (main.lua)
     "FPSCounter",       -- F3 overlay (main.lua)
     "RENDER_MODE",      -- "sprite" | "classic", toggled with F4 (renderer2d.lua)
+    "TEST_MODE",        -- set by conf.lua from the --test command-line flag
     "savePlayerData",
     "loadPlayerData",
     "changeState",
@@ -75,6 +76,8 @@ max_line_length = false
 files["main.lua"] = {
     -- main.lua is where the shared globals above are defined.
     allow_defined_top = true,
+    -- changeState is an intentionally exported cross-module entry point.
+    ignore = { "131" },
 }
 
 files["conf.lua"] = {

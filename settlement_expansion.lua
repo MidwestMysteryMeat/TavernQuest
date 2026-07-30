@@ -1141,7 +1141,7 @@ function SettlementExpansion.expandSettlement(state, PropertySystem, newX, newY)
     local settlementId, settlement = SettlementExpansion.findSettlementForClaim(state, adjacentKey)
 
     -- Determine if this is a first expansion (free, no permit needed)
-    local isFirstExpansion = false
+    local isFirstExpansion
     if settlementId then
         isFirstExpansion = SettlementExpansion.isFirstExpansionFree(state, settlementId)
     else

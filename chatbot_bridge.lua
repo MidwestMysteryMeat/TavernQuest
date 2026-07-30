@@ -625,7 +625,6 @@ M.drawFreeTalk = function()
         local dots = string.rep(".", math.floor(freeTalkState.waitTimer * 3) % 4)
         love.graphics.setColor(0.6, 0.6, 0.7)
         love.graphics.print(npcName .. " is thinking" .. dots, panelX + 20, drawY)
-        drawY = drawY + lineHeight
         totalContentH = totalContentH + lineHeight
     end
 

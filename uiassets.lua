@@ -771,7 +771,7 @@ end
 
 -- Draw a button with the new UI assets
 function UIAssets.drawButton(x, y, w, h, text, hover, active)
-    local img = nil
+    local img
     if active then
         img = UIAssets.get("button_ready_on")
     elseif hover then
@@ -809,7 +809,7 @@ end
 -- Draw a frame/panel
 function UIAssets.drawFrame(x, y, w, h, frameType)
     frameType = frameType or "mid"
-    local img = nil
+    local img
 
     if frameType == "big" then
         img = UIAssets.get("frame_big")
@@ -839,7 +839,7 @@ end
 -- Draw a background panel
 function UIAssets.drawBackground(x, y, w, h, bgType)
     bgType = bgType or "mid"
-    local img = nil
+    local img
 
     if bgType == "big" then
         img = UIAssets.get("bg_big")

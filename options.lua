@@ -12,7 +12,6 @@ end
 -- UI State
 local showOptions = false
 local showSaveMenu = false
-local scrollOffset = 0
 
 -- Colors (centralized in theme.lua)
 local colors = Theme.colors
@@ -20,7 +19,6 @@ local colors = Theme.colors
 function Options.init()
     showOptions = false
     showSaveMenu = false
-    scrollOffset = 0
 end
 
 function Options.isOpen()

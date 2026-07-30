@@ -637,7 +637,6 @@ end
 -- ============================================================================
 
 M.update = function(dt)
-    local tacticalState = getTacticalState()
     local TACTICAL_MODE = isTacticalMode()
 
     -- Update UI animations
@@ -1008,7 +1007,7 @@ M.update = function(dt)
     -- ================================================================
     -- TACTICAL COMBAT UPDATE
     -- ================================================================
-    tacticalState = getTacticalState()
+    local tacticalState = getTacticalState()
     if state.phase == "tactical_combat" and TACTICAL_MODE and tacticalState then
         -- Process any pending DOT/hazard deaths from start-of-turn effects
         if tacticalState._dotDeaths and not tacticalState.combatEnded then
@@ -1170,7 +1169,7 @@ M.draw = function()
     UIAssets.clearTooltip()
 
     -- Draw phase-appropriate background from Explore folder
-    local bgDrawn = false
+    local bgDrawn
     if state.phase == "combat" then
         -- Combat backgrounds: Hunt1, Hunt2, Hunt3 (indices 4, 5, 6)
         local combatBgIndex = 4 + (math.floor(love.timer.getTime() / 30) % 3)  -- Cycle through hunt backgrounds
@@ -1510,7 +1509,6 @@ M.draw = function()
             love.graphics.setColor(0.7, 0.6, 0.5)
             local speedMult = Backpack.getMountSpeedMultiplier()
             love.graphics.printf("\xF0\x9F\x90\xB4 " .. mount.name .. " (" .. speedMult .. "x)", 10, nextY, panelW, "center")
-            nextY = nextY + 12
         end
     end
 
@@ -1580,7 +1578,7 @@ M.draw = function()
     if state.player and state.player.party and #state.player.party > 0
        and state.phase ~= "class_select" and state.phase ~= "death" and state.phase ~= "combat" then
         local partyPanelY = 500  -- Below encumbrance panel
-        local partySectionH = 0
+        local partySectionH
         local party = state.player.party
 
         -- Party header

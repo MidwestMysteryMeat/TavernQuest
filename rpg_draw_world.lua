@@ -2157,7 +2157,6 @@ M.drawLandManage = function(x, y, w, h, mx, my)
         love.graphics.setFont(getFont(10))
         love.graphics.printf("Repair (" .. repairCost .. "g)", leftX + 10, btnY + 8, btnW, "center")
         state.landManageButtons.repair = {x = leftX + 10, y = btnY, w = btnW, h = btnH, enabled = canRepair}
-        btnY = btnY + btnH + 5
     end
 
     -- RIGHT COLUMN: Walls & Settlement
@@ -4247,13 +4246,13 @@ M.drawMap = function(x, y, w, h, mx, my)
     love.graphics.printf("Map expands as you explore!", arrowX - 30, downY + arrowSize + 35, arrowSize + 60, "center")
 
     -- Town button (if in a town)
-    local tile
+    local currentTile
     if state.world.useWorldGen then
-        tile = WorldGen.getTile(px, py)
+        currentTile = WorldGen.getTile(px, py)
     else
-        tile = state.world.mapData[py] and state.world.mapData[py][px]
+        currentTile = state.world.mapData[py] and state.world.mapData[py][px]
     end
-    if tile and tile.type == "town" then
+    if currentTile and currentTile.type == "town" then
         local townBtnY = downY + arrowSize + 55
         local townHover = mx >= arrowX - 25 and mx <= arrowX + arrowSize + 25 and my >= townBtnY and my <= townBtnY + 35
         love.graphics.setColor(townHover and {0.4, 0.5, 0.4} or {0.25, 0.35, 0.3})
@@ -4263,7 +4262,7 @@ M.drawMap = function(x, y, w, h, mx, my)
         love.graphics.printf("Enter Town", arrowX - 25, townBtnY + 10, arrowSize + 50, "center")
     end
 
-    if tile and tile.type == "dungeon" then
+    if currentTile and currentTile.type == "dungeon" then
         local dungeonBtnY = downY + arrowSize + 55
         local dungeonHover = mx >= arrowX - 25 and mx <= arrowX + arrowSize + 25 and my >= dungeonBtnY and my <= dungeonBtnY + 35
         love.graphics.setColor(dungeonHover and {0.5, 0.3, 0.4} or {0.3, 0.2, 0.25})
@@ -4612,12 +4611,10 @@ M.drawDungeon = function(x, y, w, h, mx, my)
                     -- In sprite mode with a drawn quad, suppress base tile icons
                     -- but still draw content markers (enemies, chests, NPCs, etc.)
                     local icon = tileType.icon
-                    local hasContent = false
                     local drawIcon = true
                     if tile.content then
                         if tile.content.type == "enemy" and tile.content.data and tile.content.data.alive then
                             icon = tile.content.data.isBoss and "B" or "E"
-                            hasContent = true
                             if spriteMode then
                                 Renderer2D.drawShadow(cellX + cellSize/2, cellY + cellSize - 3, cellSize * 0.6, cellSize * 0.2)
                                 -- Draw enemy indicator circle instead of letter
@@ -4638,7 +4635,6 @@ M.drawDungeon = function(x, y, w, h, mx, my)
                             end
                         elseif tile.content.type == "ally" and tile.content.data and not tile.content.data.recruited then
                             icon = "A"
-                            hasContent = true
                             if spriteMode then
                                 Renderer2D.drawShadow(cellX + cellSize/2, cellY + cellSize - 3, cellSize * 0.5, cellSize * 0.15)
                                 love.graphics.setColor(0.2, 0.7, 0.7, 0.5)
@@ -4656,7 +4652,6 @@ M.drawDungeon = function(x, y, w, h, mx, my)
                             end
                         elseif tile.content.type == "chest" and not tile.content.opened then
                             icon = "$"
-                            hasContent = true
                             if spriteMode then
                                 -- Draw chest box indicator
                                 local chestPad = math.floor(cellSize * 0.2)
@@ -4675,7 +4670,6 @@ M.drawDungeon = function(x, y, w, h, mx, my)
                             end
                         elseif tile.content.type == "npc" and tile.content.data and not tile.content.data.rescued then
                             icon = "?"
-                            hasContent = true
                             if spriteMode then
                                 Renderer2D.drawShadow(cellX + cellSize/2, cellY + cellSize - 3, cellSize * 0.5, cellSize * 0.15)
                                 love.graphics.setColor(0.3, 0.7, 0.3, 0.5)
@@ -4693,7 +4687,6 @@ M.drawDungeon = function(x, y, w, h, mx, my)
                             end
                         elseif tile.content.type == "scavenge" and not tile.content.searched then
                             icon = "."
-                            hasContent = true
                             if spriteMode then
                                 -- Small sparkle indicator for scavenge spots
                                 love.graphics.setColor(0.6, 0.5, 0.3, 0.7)
@@ -6352,7 +6345,7 @@ M.drawInventory = function(x, y, w, h, mx, my)
         if item then
             local iconDrawn = false
             if item.icon then
-                local iconImg = nil
+                local iconImg
                 if UIAssets.iconRegistry and UIAssets.iconRegistry[item.icon] then
                     iconImg = UIAssets.getIconByName(item.icon)
                 else
@@ -6390,7 +6383,6 @@ M.drawInventory = function(x, y, w, h, mx, my)
             love.graphics.setColor(hover and {0.25, 0.3, 0.4} or {0.15, 0.18, 0.25})
             love.graphics.rectangle("fill", x + 20, iy, 220, 25, 4, 4)
 
-            local iconDrawn = false
             local textOffset = 30
             local def = item.def
             if def and def.icon then
@@ -6401,7 +6393,6 @@ M.drawInventory = function(x, y, w, h, mx, my)
                     local iconSize = 20
                     local scale = iconSize / math.max(imgW, imgH)
                     love.graphics.draw(iconImg, x + 28, iy + 2, 0, scale, scale)
-                    iconDrawn = true
                     textOffset = 52
                 end
             end

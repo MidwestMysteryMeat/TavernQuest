@@ -934,7 +934,7 @@ M.updateNPCLocations = function(town)
 
         -- Find which schedule entry applies to current time
         for _, scheduleEntry in ipairs(schedule) do
-            local inSchedule = false
+            local inSchedule
             if scheduleEntry.startHour <= scheduleEntry.endHour then
                 -- Normal schedule (e.g., 8 to 18)
                 inSchedule = currentHour >= scheduleEntry.startHour and currentHour < scheduleEntry.endHour

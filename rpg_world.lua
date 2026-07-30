@@ -31,7 +31,6 @@ local SEA_ENEMIES
 local WATER_EVENTS
 local SEA_MERCHANT_GOODS
 local DEBRIS_LOOT
-local UNDEAD_ENEMY_IDS
 
 -- Forward-declared locals for internal cross-references
 local log
@@ -94,7 +93,6 @@ function M.register(s, f, deps)
     WATER_EVENTS = deps.WATER_EVENTS
     SEA_MERCHANT_GOODS = deps.SEA_MERCHANT_GOODS
     DEBRIS_LOOT = deps.DEBRIS_LOOT
-    UNDEAD_ENEMY_IDS = deps.UNDEAD_ENEMY_IDS
 
     log = deps.log
 
@@ -472,7 +470,7 @@ M.generateTown = function(x, y, level)
 
     -- Generate market prices based on specialization
     for _, good in ipairs(TRADE_GOODS) do
-        local priceMultiplier = 1.0
+        local priceMultiplier
         if isInList(good.id, specialization.produces) then
             priceMultiplier = 0.6 + math.random() * 0.2
         elseif isInList(good.category, specialization.consumes) or isInList(good.id, specialization.consumes) then
@@ -1150,7 +1148,7 @@ end
 
 M.generateDesertBiome = function(x, y, distance, dangerBonus)
     local roll = math.random()
-    local biome = "desert"  -- Default basic desert
+    local biome
 
     -- Determine if this is Glass Wastes region (far south, very rare)
     local isGlassWastes = (y and y > 30 and math.random() < 0.4)
@@ -1246,7 +1244,7 @@ M.generateDesertSettlement = function(x, y, level)
     -- Generate limited market (desert settlements are small)
     for _, good in ipairs(TRADE_GOODS) do
         -- Desert settlements have higher water prices, lower other goods
-        local priceMultiplier = 1.0
+        local priceMultiplier
         if good.category == "food" then
             priceMultiplier = 1.5 + math.random() * 0.5  -- Food expensive
         elseif good.id == "water" or good.id == "fish" then
@@ -1498,7 +1496,6 @@ M.cleanupDistantTiles = function()
     local tilesRemoved = 0
 
     for y, row in pairs(state.world.mapData) do
-        local rowEmpty = true
         for x, tile in pairs(row) do
             if tile then
                 local dist = math.abs(x - px) + math.abs(y - py)
@@ -1517,7 +1514,6 @@ M.cleanupDistantTiles = function()
                         tilesCompressed = tilesCompressed + 1
                     end
                 end
-                rowEmpty = false
             end
         end
 
@@ -1691,13 +1687,11 @@ M.movePlayer = function(dx, dy)
         -- Check if we're at the edge and need to expand
         if newX < wOff then
             expandMap("west")
-            wOff = state.world.westOffset or 0
         elseif newX >= w + eOff then
             expandMap("east")
         end
         if newY < nOff then
             expandMap("north")
-            nOff = state.world.northOffset or 0
         elseif newY >= h + sOff then
             expandMap("south")
         end
@@ -1891,7 +1885,7 @@ M.movePlayer = function(dx, dy)
 
     -- Random encounter based on terrain and weather
     -- Using global Backpack
-    local mount = Backpack.getEquippedMount()
+    mount = Backpack.getEquippedMount()
     local encounterChance = tileType.encounterRate
 
     -- Mounts reduce encounter rate (flying 70%, carts 50%, etc.)

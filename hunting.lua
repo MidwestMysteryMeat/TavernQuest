@@ -798,7 +798,6 @@ function Hunting.draw()
         local angle = math.atan2(dy, dx) - math.min(0.5, distance / 1500)
 
         love.graphics.setColor(1, 1, 0, 0.3)
-        local prevX, prevY = startX, startY
         local vx = math.cos(angle) * speed
         local vy = math.sin(angle) * speed
         for t = 0.1, 2, 0.1 do
@@ -806,7 +805,6 @@ function Hunting.draw()
             local py = startY + vy * t + 150 * t * t  -- Gravity
             if py > screenH then break end
             love.graphics.circle("fill", px, py, 2)
-            prevX, prevY = px, py
         end
     end
 

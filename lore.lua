@@ -12,8 +12,6 @@ end
 -- UI State
 local currentTab = "overview"
 local scrollOffset = 0
-local selectedEntry = nil
-local searchText = ""
 
 -- Colors
 local colors = {
@@ -756,8 +754,6 @@ local drawOverview, drawPlaces, drawPeople, drawFactions, drawHistory, drawMagic
 function Lore.init()
     currentTab = "overview"
     scrollOffset = 0
-    selectedEntry = nil
-    searchText = ""
 end
 
 function Lore.update(dt)

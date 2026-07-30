@@ -277,9 +277,18 @@ content screen behind a cheat code is why bug #1 went unnoticed.
 
 ---
 
-## Known remaining lint debt
+## Follow-up gate verification
 
-`luacheck .` reports **0 errors** and ~65 warnings on this branch, all of them
-`W311` (value assigned but never read) and `W231` (local set but never accessed).
-These are dead stores, not defects. They are deliberately left visible rather
-than suppressed — see `.luacheckrc` for what *is* suppressed and why.
+The first pass stopped at **0 errors / 67 warnings**, so the documented
+`luacheck .` command still exited nonzero. The follow-up traced every warning
+instead of muting the categories:
+
+- obsolete dependency-injection fields and never-read UI state were removed;
+- values overwritten on every branch are now declared without fake defaults;
+- same-scope bindings and tactical-AI shadows were made explicit;
+- the cross-file `TEST_MODE` and `changeState` globals are documented in the
+  narrowest applicable Luacheck config.
+
+No gameplay behavior was intentionally changed in that cleanup. Current
+verification is **0 warnings / 0 errors in 76 Lua files** and **89/89 headless
+assertions**.

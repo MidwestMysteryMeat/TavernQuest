@@ -676,7 +676,7 @@ function TacticalUI.drawUnits(combatState, gridX, gridY, tileSize)
             love.graphics.setLineWidth(1)
 
             -- Unit letter/portrait indicator
-            local letter = ""
+            local letter
             if unit.isPlayer then
                 letter = "P"
             elseif unit.isCompanion then
@@ -936,7 +936,7 @@ function TacticalUI.drawActionPanel(combatState, x, y, w, h, mx, my)
     -- Phase status
     love.graphics.setColor(COLORS.textYellow)
     love.graphics.setFont(getFont(9))
-    local phaseInfo = ""
+    local phaseInfo
     if not active.hasMoved and not active.hasActed then
         phaseInfo = "Move + Action available"
     elseif active.hasMoved and not active.hasActed then

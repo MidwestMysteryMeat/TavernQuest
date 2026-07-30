@@ -611,7 +611,7 @@ M.enterDungeon = function(worldX, worldY, isWaterDungeon)
 
     -- Type-specific entry message
     local typeColor = state.dungeon.dungeonColor or {0.7, 0.5, 0.8}
-    local typeMsg = ""
+    local typeMsg
     if state.dungeon.dungeonType == "lich_lair" then
         typeMsg = " An overwhelming sense of dread washes over you. The dead walk these halls..."
         log("You enter " .. state.dungeon.name .. "...", {0.4, 0.1, 0.5})

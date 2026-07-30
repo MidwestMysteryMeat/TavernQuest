@@ -44,7 +44,8 @@ luacheck .          # static analysis, must report 0 errors
 
 ## Status
 
-Boots clean, `luacheck` reports 0 errors, 78 test assertions pass.
+Boots clean, `luacheck` reports 0 warnings / 0 errors, and 89 test assertions
+pass.
 
 **Honest caveats:**
 
@@ -52,8 +53,6 @@ Boots clean, `luacheck` reports 0 errors, 78 test assertions pass.
 - **Lightly playtested.** The boot path, module graph and save schema are
   verified; deep gameplay is not. Expect rough edges.
 - **No autosave**, no key rebinding, gamepad disabled.
-- ~65 `luacheck` warnings remain (dead stores). They are left visible on
-  purpose — see `.luacheckrc`.
 
 Roadmap: [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md).
 
@@ -65,8 +64,8 @@ Roadmap: [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md).
 | Lua lines | 162,265 | ~101,500 |
 | Unreachable modules | 39 (35k lines) | 0 |
 | Docs | 59 files, 36k lines | 19 files (16 of them lore) |
-| Linter | none | `luacheck`, 0 errors |
-| Tests | none | 78 assertions |
+| Linter | none | `luacheck`, 0 warnings / 0 errors |
+| Tests | none | 89 assertions |
 
 **Removed as dead code** — never reachable from `main.lua`:
 

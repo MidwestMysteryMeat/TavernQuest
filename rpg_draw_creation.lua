@@ -1229,7 +1229,6 @@ M.drawClassSelect = function(x, y, w, h, mx, my)
     local displayStep = cc.step
     local displayTotal = 6
     if cc.step == "stat_alloc" then
-        displayStep = 1
         love.graphics.printf("Step 1/6: Race - Stat Allocation", x, y + 5, w, "center")
     else
         local stepText = "Step " .. displayStep .. "/" .. displayTotal .. ": " .. (stepNames[displayStep] or "")

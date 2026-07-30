@@ -2066,7 +2066,6 @@ function Fishing.draw()
     end
 
     -- Draw bait count overlay on bait button
-    local bait = Fishing.getCurrentBait()
     love.graphics.setColor(0.8, 0.8, 0.6)
     love.graphics.setFont(getFont(9))
     love.graphics.printf("x" .. state.baitCount, 305, screenH - 45 + 22, 90, "center")

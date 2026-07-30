@@ -17,8 +17,6 @@ local F
 
 -- Tactical combat references (set during register)
 local TacticalCombat
-local TacticalUI
-local TacticalAI
 local tacticalStateRef   -- function returning current tacticalState
 local setTacticalState   -- function to set tacticalState
 
@@ -30,12 +28,10 @@ local DAMAGE_TYPES
 local VAMPIRE_ENEMY_IDS
 local UNDEAD_ENEMY_IDS
 local SEA_ENEMIES
-local WEATHER_EFFECTS
 local TACTICAL_MODE
 
 -- Module references (set during register)
 local LuminaryPatrols
-local AutoPlay
 
 -- Forward-declared locals within this module
 -- Local log helper (delegates to the shared log via F table)
@@ -48,9 +44,6 @@ local onEnemyDefeated
 local checkAllEnemiesDefeated
 local endCombat
 local advanceTurn
-local startCombat
-local generateEncounter
-local createEnemyInstance
 local graveyard
 
 M.F_FUNCTIONS = {
@@ -67,8 +60,6 @@ function M.register(s, f, deps)
     state = s
     F = f
     TacticalCombat = deps.TacticalCombat
-    TacticalUI = deps.TacticalUI
-    TacticalAI = deps.TacticalAI
     tacticalStateRef = deps.getTacticalState
     setTacticalState = deps.setTacticalState
     ENEMIES = deps.ENEMIES
@@ -78,10 +69,8 @@ function M.register(s, f, deps)
     VAMPIRE_ENEMY_IDS = deps.VAMPIRE_ENEMY_IDS
     UNDEAD_ENEMY_IDS = deps.UNDEAD_ENEMY_IDS
     SEA_ENEMIES = deps.SEA_ENEMIES
-    WEATHER_EFFECTS = deps.WEATHER_EFFECTS
     TACTICAL_MODE = deps.TACTICAL_MODE
     LuminaryPatrols = deps.LuminaryPatrols
-    AutoPlay = deps.AutoPlay
     graveyard = deps.graveyard
 
     -- log is now a local function defined above that delegates to F.log
@@ -97,9 +86,6 @@ function M.register(s, f, deps)
     checkAllEnemiesDefeated = M.checkAllEnemiesDefeated
     endCombat = M.endCombat
     advanceTurn = M.advanceTurn
-    startCombat = M.startCombat
-    generateEncounter = M.generateEncounter
-    createEnemyInstance = M.createEnemyInstance
 end
 
 -- ============================================================================
@@ -1188,11 +1174,9 @@ M.companionTurn = function()
 
     -- Find a valid enemy target (first alive enemy)
     local targetEnemy = nil
-    local targetIdx = nil
-    for i, enemy in ipairs(state.combat.enemies) do
+    for _, enemy in ipairs(state.combat.enemies) do
         if enemy.hp > 0 then
             targetEnemy = enemy
-            targetIdx = i
             break
         end
     end
@@ -1300,7 +1284,6 @@ M.companionAttackTarget = function()
         for i, enemy in ipairs(state.combat.enemies) do
             if enemy.hp > 0 then
                 targetEnemy = enemy
-                targetIdx = i
                 state.combat.selectedTarget = i
                 break
             end
