@@ -45,7 +45,11 @@ Developed with AI assistance — **Anthropic Claude** (Claude Code) for implemen
 
 ## License
 
-Proprietary — the project's own code is under the **Ephemeral / Proprietary License** (All Rights Reserved with a Sharing Exception); see [LICENSE](LICENSE). **Art/audio assets under `assets/` are third-party** (LPC sprite sets, tilesets, music packs) and retain their own licenses — several are CC-BY/GPL and require attribution; see the `CREDITS.txt`, `Attribution.txt`, and `LICENSE-*.txt` files bundled alongside each asset pack before redistributing.
+Licensed under the **[Apache License 2.0](LICENSE)** — free to use, modify, fork and build on, commercially or not.
+
+**Credit is required.** Apache-2.0 §4(c)–(d) obliges you to keep the copyright notice and to reproduce [`NOTICE`](NOTICE) in anything you distribute, including binaries and hosted builds. Credit it as `TavernQuest by MysteryMeat` (https://github.com/MidwestMysteryMeat/TavernQuest) in your credits screen, About box, or docs. The project name and the MysteryMeat name are not licensed for endorsement or promotion (§6).
+
+Apache-2.0 covers **the project's own code only.** **Art/audio assets under `assets/` are third-party** (LPC sprite sets, tilesets, music packs) and retain their own licenses — several are CC-BY/GPL and require attribution of their own; see the `CREDITS.txt`, `Attribution.txt`, and `LICENSE-*.txt` files bundled alongside each asset pack before redistributing.
 
 ## Art & audio licensing
 
