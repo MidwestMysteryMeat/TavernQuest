@@ -240,6 +240,47 @@ local function testSettlementValidation()
 end
 
 --- The offline NPC dialogue engine is the project's distinctive asset.
+--- Build the globals the game normally establishes in love.load.
+--- Test mode skips SaveSystem.init/loadPlayerData so it never touches the real
+--- save slots; the smoke tests need a populated PlayerData to run against.
+local function installFixtures()
+    local SaveSystem = require("savesystem")
+
+    local function deepcopy(v)
+        if type(v) ~= "table" then return v end
+        local out = {}
+        for k, item in pairs(v) do out[k] = deepcopy(item) end
+        return out
+    end
+
+    PlayerData = deepcopy(SaveSystem.defaultPlayerData)
+    PlayerData.lastPassiveUpdate = os.time()
+
+    -- Never write save files from a test run.
+    savePlayerData = function() end
+end
+
+--- Smoke test: actually run each state's lifecycle, not just check it exists.
+--- These screens are only reachable by player action, so without this a
+--- refactor can gut them and every other check still passes.
+local function testStateSmoke()
+    describe("state smoke", function()
+        for _, name in ipairs(STATE_MODULES) do
+            it(name .. " init/update/draw runs without error", function()
+                local module = require(name)
+                module.init()
+                module.update(1 / 60)
+                love.graphics.push("all")
+                local ok, err = pcall(module.draw)
+                love.graphics.pop()
+                love.graphics.origin()
+                love.graphics.setColor(1, 1, 1, 1)
+                isTrue(ok, name .. ".draw: " .. tostring(err))
+            end)
+        end
+    end)
+end
+
 local function testChatbot()
     describe("chatbot fallback", function()
         local Chatbot = require("chatbot_fallback")
@@ -257,12 +298,15 @@ function Test.run()
     print("Tavern Quest test suite")
     print("=======================")
 
+    installFixtures()
+
     testStateModules()
     testSupportModules()
     testSaveSystem()
     testNoDanglingStateReferences()
     testDataIntegrity()
     testSettlementValidation()
+    testStateSmoke()
     testChatbot()
 
     print("")
