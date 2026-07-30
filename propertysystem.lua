@@ -5,7 +5,6 @@
 local PropertySystem = {}
 
 local Backpack = require("backpack")
-local FarmingSystem = require("farming_system")
 local ResourceProcessing = require("resource_processing")
 local SettlementExpansion = require("settlement_expansion")
 
@@ -2154,11 +2153,7 @@ function PropertySystem.onDayAdvance(daysPassed, hoursElapsed)
     local wages, wageBreakdown = PropertySystem.deductEmployeeWages(daysPassed)
     local taxes, taxBreakdown = PropertySystem.deductPropertyTaxes(daysPassed)
 
-    -- Update farm plots (delegated to FarmingSystem)
     for key, claim in pairs(state.player.properties.landClaims) do
-        if claim.farmPlots then
-            PropertySystem.updateFarmPlots(key, hoursElapsed)
-        end
         -- Update processing (delegated to ResourceProcessing)
         if claim.processing then
             PropertySystem.updateProcessing(key, hoursElapsed)
@@ -2242,45 +2237,6 @@ function PropertySystem.loadSaveData(data)
     end
 end
 
--- ============================================================================
---          DELEGATED FUNCTIONS: FARMING SYSTEM (farming_system.lua)
--- ============================================================================
-
-function PropertySystem.initializeFarm(claimKey, gridSize)
-    return FarmingSystem.initializeFarm(state, claimKey, gridSize)
-end
-
-function PropertySystem.expandFarm(claimKey, newSize)
-    return FarmingSystem.expandFarm(state, claimKey, newSize)
-end
-
-function PropertySystem.plantSeed(claimKey, plotIndex, seedId)
-    return FarmingSystem.plantSeed(state, claimKey, plotIndex, seedId)
-end
-
-function PropertySystem.waterPlot(claimKey, plotIndex)
-    return FarmingSystem.waterPlot(state, claimKey, plotIndex)
-end
-
-function PropertySystem.waterAllPlots(claimKey)
-    return FarmingSystem.waterAllPlots(state, claimKey)
-end
-
-function PropertySystem.harvestPlot(claimKey, plotIndex)
-    return FarmingSystem.harvestPlot(state, claimKey, plotIndex)
-end
-
-function PropertySystem.clearPlot(claimKey, plotIndex)
-    return FarmingSystem.clearPlot(state, claimKey, plotIndex)
-end
-
-function PropertySystem.fertilizePlot(claimKey, plotIndex)
-    return FarmingSystem.fertilizePlot(state, claimKey, plotIndex)
-end
-
-function PropertySystem.updateFarmPlots(claimKey, hoursElapsed)
-    return FarmingSystem.updateFarmPlots(state, claimKey, hoursElapsed)
-end
 
 -- ============================================================================
 --      DELEGATED FUNCTIONS: RESOURCE PROCESSING (resource_processing.lua)
