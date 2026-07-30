@@ -843,7 +843,7 @@ function Hunting.draw()
     love.graphics.setColor(0, 0, 0, 0.7)
     local locName = huntBgNames[state.currentBgIndex] or "Camp"
     love.graphics.setFont(UI.fonts.get(16))
-    local locW = math.max(150, love.graphics.UI.fonts.get():getWidth(locName) + 30)
+    local locW = math.max(150, love.graphics.getFont():getWidth(locName) + 30)
     love.graphics.rectangle("fill", screenW/2 - locW/2, btnY, locW, btnH, 6, 6)
     love.graphics.setColor(0.7, 0.9, 0.5)
     love.graphics.printf(locName, screenW/2 - locW/2, btnY + 10, locW, "center")

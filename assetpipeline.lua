@@ -548,12 +548,12 @@ function AssetLoader.loadPlayer()
     AssetLoader.dungeonCrawl.player.base = {}
 
     -- Try to load base sprites
-    local basePath = basePath .. "base/"
-    if love.filesystem.getInfo(basePath .. "human_m.png") then
-        AssetLoader.dungeonCrawl.player.base.human_male = love.graphics.newImage(basePath .. "human_m.png")
+    local bodyPath = basePath .. "base/"
+    if love.filesystem.getInfo(bodyPath .. "human_m.png") then
+        AssetLoader.dungeonCrawl.player.base.human_male = love.graphics.newImage(bodyPath .. "human_m.png")
     end
-    if love.filesystem.getInfo(basePath .. "human_f.png") then
-        AssetLoader.dungeonCrawl.player.base.human_female = love.graphics.newImage(basePath .. "human_f.png")
+    if love.filesystem.getInfo(bodyPath .. "human_f.png") then
+        AssetLoader.dungeonCrawl.player.base.human_female = love.graphics.newImage(bodyPath .. "human_f.png")
     end
 end
 
@@ -1097,15 +1097,5 @@ function AssetScanner.printCode()
     print(code)
 end
 
-
--- =====================================================================
--- BACKWARD COMPATIBILITY
--- =====================================================================
--- Register sub-tables so that require("assetconfig"), require("assetloader"),
--- and require("assetscanner") all resolve to the correct sub-module tables.
-
-package.loaded["assetconfig"] = AssetConfig
-package.loaded["assetloader"] = AssetLoader
-package.loaded["assetscanner"] = AssetScanner
 
 return AssetPipeline

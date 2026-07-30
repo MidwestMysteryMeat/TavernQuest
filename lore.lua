@@ -749,6 +749,10 @@ The empire justifies this by pointing to the Wastes of Calidar: "This is what ha
 -- UI FUNCTIONS
 --==============================================================================
 
+-- Forward declarations: Lore.draw dispatches to these before they are defined
+-- further down the file. Without this they would resolve as nil globals.
+local drawOverview, drawPlaces, drawPeople, drawFactions, drawHistory, drawMagic, getContentHeight
+
 function Lore.init()
     currentTab = "overview"
     scrollOffset = 0
@@ -864,7 +868,7 @@ function Lore.draw()
     love.graphics.printf("Back", backX, backY + 11, backW, "center")
 end
 
-local function drawOverview(x, y, w, h)
+drawOverview = function(x, y, w, h)
     local lineY = y
 
     -- Title
@@ -904,7 +908,7 @@ local function drawOverview(x, y, w, h)
     end
 end
 
-local function drawPlaces(x, y, w, h)
+drawPlaces = function(x, y, w, h)
     local lineY = y
 
     for _, place in ipairs(Lore.places) do
@@ -956,7 +960,7 @@ local function drawPlaces(x, y, w, h)
     end
 end
 
-local function drawPeople(x, y, w, h)
+drawPeople = function(x, y, w, h)
     local lineY = y
 
     for _, person in ipairs(Lore.people) do
@@ -1006,7 +1010,7 @@ local function drawPeople(x, y, w, h)
     end
 end
 
-local function drawFactions(x, y, w, h)
+drawFactions = function(x, y, w, h)
     local lineY = y
 
     for _, faction in ipairs(Lore.factions) do
@@ -1072,7 +1076,7 @@ local function drawFactions(x, y, w, h)
     end
 end
 
-local function drawHistory(x, y, w, h)
+drawHistory = function(x, y, w, h)
     local lineY = y
 
     -- Timeline header
@@ -1114,7 +1118,7 @@ local function drawHistory(x, y, w, h)
     end
 end
 
-local function drawMagic(x, y, w, h)
+drawMagic = function(x, y, w, h)
     local lineY = y
 
     -- Overview
@@ -1185,7 +1189,7 @@ local function drawMagic(x, y, w, h)
     end
 end
 
-local function getContentHeight()
+getContentHeight = function()
     -- Estimate content height based on current tab
     if currentTab == "overview" then
         return 600

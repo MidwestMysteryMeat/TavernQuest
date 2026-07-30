@@ -1,4 +1,5 @@
--- Comprehensive Stats Page - Track all game mode statistics
+-- Stats page: read-only view over the persistent save data.
+-- Every value here is derived from PlayerData at draw time; nothing is cached.
 
 local StatsPage = {}
 local UI = require("ui")
@@ -6,11 +7,7 @@ local UI = require("ui")
 -- Stat categories with their icons
 local CATEGORIES = {
     {id = "general", name = "General Stats", icon = "📊"},
-    {id = "poker", name = "Poker Stats", icon = "🃏"},
-    {id = "slots", name = "Slots Stats", icon = "🎰"},
-    {id = "cafe", name = "Cafe Stats", icon = "☕"},
-    {id = "market", name = "Market Stats", icon = "📈"},
-    {id = "cards", name = "Trading Cards", icon = "🎴"},
+    {id = "crafting", name = "Crafting", icon = "⚒"},
     {id = "achievements", name = "Achievements", icon = "🏆"},
 }
 
@@ -24,95 +21,28 @@ local categoryTabs
 local scrollContainer
 local backButton
 
--- Initialize stats if they don't exist
+--- Create the persistent stat tables on first use / after a save migration.
 local function ensureStats()
-    if not PlayerData.gameStats then
-        PlayerData.gameStats = {}
-    end
+    PlayerData.gameStats = PlayerData.gameStats or {}
 
-    -- General stats
     if not PlayerData.gameStats.general then
         PlayerData.gameStats.general = {
-            totalPlayTime = 0,
-            sessionCount = 0,
             firstPlayed = os.time(),
             lastPlayed = os.time(),
         }
     end
+end
 
-    -- Poker stats
-    if not PlayerData.gameStats.poker then
-        PlayerData.gameStats.poker = {
-            gamesPlayed = 0,
-            gamesWon = 0,
-            gamesLost = 0,
-            totalChips = 0,
-            totalMult = 0,
-            handsPlayed = 0,
-            bestHand = "None",
-            bestHandScore = 0,
-            highestRound = 0,
-            perfectGames = 0,  -- Won without losing a round
-            comebacks = 0,  -- Won after being behind
-        }
-    end
+local function countKeys(t)
+    local n = 0
+    for _ in pairs(t or {}) do n = n + 1 end
+    return n
+end
 
-    -- Slots stats
-    if not PlayerData.gameStats.slots then
-        PlayerData.gameStats.slots = {
-            totalSpins = 0,
-            totalWagered = 0,
-            totalWon = 0,
-            biggestWin = 0,
-            jackpots = 0,
-            freeSpinsTriggered = 0,
-            clustersFormed = 0,
-            lineWins = 0,
-        }
-    end
-
-    -- Cafe stats
-    if not PlayerData.gameStats.cafe then
-        PlayerData.gameStats.cafe = {
-            daysWorked = 0,
-            customersServed = 0,
-            perfectOrders = 0,
-            totalTips = 0,
-            totalWages = 0,
-            itemsPrepared = 0,
-            customersLost = 0,
-            bestDayEarnings = 0,
-            upgradesPurchased = 0,
-        }
-    end
-
-    -- Stock market stats
-    if not PlayerData.gameStats.market then
-        PlayerData.gameStats.market = {
-            tradesExecuted = 0,
-            totalBought = 0,
-            totalSold = 0,
-            biggestProfit = 0,
-            biggestLoss = 0,
-            daysTraded = 0,
-            stocksOwned = 0,
-            peakPortfolioValue = 0,
-        }
-    end
-
-    -- Trading cards stats
-    if not PlayerData.gameStats.cards then
-        PlayerData.gameStats.cards = {
-            packsOpened = 0,
-            cardsCollected = 0,
-            cardsSold = 0,
-            uniqueCards = 0,
-            mythicsFound = 0,
-            legendariesFound = 0,
-            foilsFound = 0,
-            coinsFromSelling = 0,
-        }
-    end
+--- Total properties the player owns across towns, land claims and settlements.
+local function countProperties()
+    local props = PlayerData.properties or {}
+    return countKeys(props.townProperties) + countKeys(props.landClaims) + countKeys(props.settlements)
 end
 
 -- Get formatted stat value
@@ -147,123 +77,28 @@ end
 -- Forward declaration for getAchievements (defined below getStats)
 local getAchievements
 
--- Get stats for a category
+--- Rows to render for a category tab.
 local function getStats(category)
     ensureStats()
 
     if category == "general" then
-        local winRate = 0
-        if PlayerData.wins + PlayerData.losses > 0 then
-            winRate = PlayerData.wins / (PlayerData.wins + PlayerData.losses)
-        end
-
         return {
-            {name = "Total Coins", value = PlayerData.coins, type = "currency", color = {1, 0.9, 0.3}},
-            {name = "Total Wins", value = PlayerData.wins, type = "number", color = {0.3, 0.8, 0.3}},
-            {name = "Total Losses", value = PlayerData.losses, type = "number", color = {0.8, 0.3, 0.3}},
-            {name = "Win Rate", value = winRate, type = "percent", color = {0.5, 0.7, 0.9}},
-            {name = "Games Played", value = PlayerData.totalGamesPlayed or 0, type = "number"},
-            {name = "Cards in Collection", value = #(PlayerData.collection or {}), type = "number"},
-            {name = "Jokers Collected", value = #(PlayerData.jokerCollection or {}), type = "number"},
-            {name = "Loot Boxes Opened", value = PlayerData.lootBoxesOpened or 0, type = "number"},
-            {name = "Favorite Modes", value = #(PlayerData.favoriteModes or {}), type = "number"},
+            {name = "Coins", value = PlayerData.coins or 0, type = "currency", color = {1, 0.9, 0.3}},
+            {name = "Crystals", value = PlayerData.crystals or 0, type = "number", color = {0.6, 0.8, 1}},
+            {name = "Properties Owned", value = countProperties(), type = "number"},
+            {name = "Locations Discovered", value = countKeys(PlayerData.discoveredLocations), type = "number"},
+            {name = "Races Unlocked", value = countKeys(PlayerData.unlockedRaces), type = "number"},
+            {name = "Ascensions", value = PlayerData.ascensionCount or 0, type = "number", color = {0.8, 0.5, 0.9}},
             {name = "First Played", value = PlayerData.gameStats.general.firstPlayed, type = "date"},
             {name = "Last Played", value = PlayerData.gameStats.general.lastPlayed, type = "date"},
         }
-    elseif category == "poker" then
-        local stats = PlayerData.gameStats.poker
-        local winRate = 0
-        if stats.gamesPlayed > 0 then
-            winRate = stats.gamesWon / stats.gamesPlayed
-        end
-
+    elseif category == "crafting" then
+        local skills = PlayerData.craftingSkills or {}
         return {
-            {name = "Games Played", value = stats.gamesPlayed, type = "number"},
-            {name = "Games Won", value = stats.gamesWon, type = "number", color = {0.3, 0.8, 0.3}},
-            {name = "Games Lost", value = stats.gamesLost, type = "number", color = {0.8, 0.3, 0.3}},
-            {name = "Win Rate", value = winRate, type = "percent", color = {0.5, 0.7, 0.9}},
-            {name = "Total Chips Scored", value = stats.totalChips, type = "number", color = {0.3, 0.6, 0.9}},
-            {name = "Total Mult Earned", value = stats.totalMult, type = "number", color = {0.9, 0.5, 0.3}},
-            {name = "Hands Played", value = stats.handsPlayed, type = "number"},
-            {name = "Best Hand", value = stats.bestHand, type = "string", color = {0.9, 0.7, 0.2}},
-            {name = "Best Hand Score", value = stats.bestHandScore, type = "number", color = {0.9, 0.7, 0.2}},
-            {name = "Highest Round", value = stats.highestRound, type = "number"},
-            {name = "Perfect Games", value = stats.perfectGames, type = "number", color = {0.9, 0.8, 0.3}},
-            {name = "Comebacks", value = stats.comebacks, type = "number", color = {0.8, 0.5, 0.9}},
-        }
-    elseif category == "slots" then
-        local stats = PlayerData.gameStats.slots
-        local netProfit = stats.totalWon - stats.totalWagered
-        local rtp = 0
-        if stats.totalWagered > 0 then
-            rtp = stats.totalWon / stats.totalWagered
-        end
-
-        return {
-            {name = "Total Spins", value = stats.totalSpins, type = "number"},
-            {name = "Total Wagered", value = stats.totalWagered, type = "currency"},
-            {name = "Total Won", value = stats.totalWon, type = "currency", color = {0.3, 0.8, 0.3}},
-            {name = "Net Profit/Loss", value = netProfit, type = "currency", color = netProfit >= 0 and {0.3, 0.8, 0.3} or {0.8, 0.3, 0.3}},
-            {name = "RTP", value = rtp, type = "percent"},
-            {name = "Biggest Win", value = stats.biggestWin, type = "currency", color = {0.9, 0.7, 0.2}},
-            {name = "Jackpots Hit", value = stats.jackpots, type = "number", color = {0.9, 0.3, 0.5}},
-            {name = "Free Spins Triggered", value = stats.freeSpinsTriggered, type = "number"},
-            {name = "Clusters Formed", value = stats.clustersFormed, type = "number"},
-            {name = "Line Wins", value = stats.lineWins, type = "number"},
-        }
-    elseif category == "cafe" then
-        local stats = PlayerData.gameStats.cafe
-        local avgTips = 0
-        if stats.daysWorked > 0 then
-            avgTips = stats.totalTips / stats.daysWorked
-        end
-        local perfectRate = 0
-        if stats.customersServed > 0 then
-            perfectRate = stats.perfectOrders / stats.customersServed
-        end
-
-        return {
-            {name = "Days Worked", value = stats.daysWorked, type = "number"},
-            {name = "Customers Served", value = stats.customersServed, type = "number"},
-            {name = "Perfect Orders", value = stats.perfectOrders, type = "number", color = {0.3, 0.8, 0.3}},
-            {name = "Perfect Order Rate", value = perfectRate, type = "percent"},
-            {name = "Customers Lost", value = stats.customersLost, type = "number", color = {0.8, 0.3, 0.3}},
-            {name = "Total Tips", value = stats.totalTips, type = "currency", color = {0.3, 0.8, 0.3}},
-            {name = "Total Wages", value = stats.totalWages, type = "currency"},
-            {name = "Average Tips/Day", value = avgTips, type = "currency"},
-            {name = "Best Day Earnings", value = stats.bestDayEarnings, type = "currency", color = {0.9, 0.7, 0.2}},
-            {name = "Items Prepared", value = stats.itemsPrepared, type = "number"},
-            {name = "Upgrades Purchased", value = stats.upgradesPurchased, type = "number"},
-        }
-    elseif category == "market" then
-        local stats = PlayerData.gameStats.market
-        local netGain = stats.totalSold - stats.totalBought
-
-        return {
-            {name = "Trades Executed", value = stats.tradesExecuted, type = "number"},
-            {name = "Days Traded", value = stats.daysTraded, type = "number"},
-            {name = "Total Bought", value = stats.totalBought, type = "currency"},
-            {name = "Total Sold", value = stats.totalSold, type = "currency"},
-            {name = "Net Gain/Loss", value = netGain, type = "currency", color = netGain >= 0 and {0.3, 0.8, 0.3} or {0.8, 0.3, 0.3}},
-            {name = "Biggest Profit", value = stats.biggestProfit, type = "currency", color = {0.3, 0.8, 0.3}},
-            {name = "Biggest Loss", value = stats.biggestLoss, type = "currency", color = {0.8, 0.3, 0.3}},
-            {name = "Peak Portfolio Value", value = stats.peakPortfolioValue, type = "currency", color = {0.9, 0.7, 0.2}},
-            {name = "Stocks Currently Owned", value = stats.stocksOwned, type = "number"},
-        }
-    elseif category == "cards" then
-        local stats = PlayerData.gameStats.cards
-        local tradingCards = PlayerData.tradingCards or {}
-
-        return {
-            {name = "Packs Opened", value = tradingCards.packsPurchased or stats.packsOpened, type = "number"},
-            {name = "Cards Collected", value = tradingCards.totalCardsCollected or stats.cardsCollected, type = "number"},
-            {name = "Cards in Collection", value = #(tradingCards.collection or {}), type = "number"},
-            {name = "Cards Sold", value = stats.cardsSold, type = "number"},
-            {name = "Unique Cards", value = stats.uniqueCards, type = "number"},
-            {name = "Mythics Found", value = stats.mythicsFound, type = "number", color = {0.9, 0.3, 0.5}},
-            {name = "Legendaries Found", value = stats.legendariesFound, type = "number", color = {0.9, 0.7, 0.2}},
-            {name = "Foils Found", value = stats.foilsFound, type = "number", color = {0.8, 0.8, 0.9}},
-            {name = "Coins from Selling", value = stats.coinsFromSelling, type = "currency"},
+            {name = "Items Crafted", value = #(PlayerData.craftedItems or {}), type = "number"},
+            {name = "Forging XP", value = skills.forging or 0, type = "number", color = {0.9, 0.5, 0.3}},
+            {name = "Wizardry XP", value = skills.wizardry or 0, type = "number", color = {0.5, 0.4, 0.9}},
+            {name = "Alchemy XP", value = skills.alchemy or 0, type = "number", color = {0.3, 0.8, 0.5}},
         }
     elseif category == "achievements" then
         return getAchievements()
@@ -272,102 +107,40 @@ local function getStats(category)
     return {}
 end
 
--- Get achievements
+--- Achievement rows. `unlocked` is derived from live save data, never stored.
 getAchievements = function()
-    local achievements = {}
-
-    -- General achievements
-    table.insert(achievements, {
-        name = "First Steps",
-        desc = "Win your first game",
-        unlocked = PlayerData.wins >= 1,
-        icon = "🎯"
-    })
-    table.insert(achievements, {
-        name = "Getting Started",
-        desc = "Win 10 games",
-        unlocked = PlayerData.wins >= 10,
-        icon = "🌟"
-    })
-    table.insert(achievements, {
-        name = "Veteran",
-        desc = "Win 50 games",
-        unlocked = PlayerData.wins >= 50,
-        icon = "⭐"
-    })
-    table.insert(achievements, {
-        name = "Master",
-        desc = "Win 100 games",
-        unlocked = PlayerData.wins >= 100,
-        icon = "👑"
-    })
-    table.insert(achievements, {
-        name = "Rich",
-        desc = "Have 10,000 coins",
-        unlocked = PlayerData.coins >= 10000,
-        icon = "💰"
-    })
-    table.insert(achievements, {
-        name = "Wealthy",
-        desc = "Have 100,000 coins",
-        unlocked = PlayerData.coins >= 100000,
-        icon = "💎"
-    })
-    table.insert(achievements, {
-        name = "Collector",
-        desc = "Collect 100 cards",
-        unlocked = #(PlayerData.collection or {}) >= 100,
-        icon = "🃏"
-    })
-    table.insert(achievements, {
-        name = "Joker Fan",
-        desc = "Collect 10 jokers",
-        unlocked = #(PlayerData.jokerCollection or {}) >= 10,
-        icon = "🤡"
-    })
-
-    -- Mode-specific achievements
     ensureStats()
 
-    table.insert(achievements, {
-        name = "High Roller",
-        desc = "Win 10,000 in slots",
-        unlocked = (PlayerData.gameStats.slots.totalWon or 0) >= 10000,
-        icon = "🎰"
-    })
-    table.insert(achievements, {
-        name = "Jackpot!",
-        desc = "Hit a jackpot in slots",
-        unlocked = (PlayerData.gameStats.slots.jackpots or 0) >= 1,
-        icon = "🎊"
-    })
-    table.insert(achievements, {
-        name = "Barista",
-        desc = "Serve 100 customers in cafe",
-        unlocked = (PlayerData.gameStats.cafe.customersServed or 0) >= 100,
-        icon = "☕"
-    })
-    table.insert(achievements, {
-        name = "Perfect Service",
-        desc = "Get 50 perfect orders",
-        unlocked = (PlayerData.gameStats.cafe.perfectOrders or 0) >= 50,
-        icon = "✨"
-    })
-    table.insert(achievements, {
-        name = "Day Trader",
-        desc = "Execute 100 trades",
-        unlocked = (PlayerData.gameStats.market.tradesExecuted or 0) >= 100,
-        icon = "📈"
-    })
-    table.insert(achievements, {
-        name = "Lucky Find",
-        desc = "Find a mythic card",
-        unlocked = (PlayerData.gameStats.cards.mythicsFound or 0) >= 1,
-        icon = "🎴"
-    })
+    local skills = PlayerData.craftingSkills or {}
+    local unlockedFlags = PlayerData.achievements or {}
+    local properties = countProperties()
 
-    return achievements
+    return {
+        {name = "Rich", desc = "Have 10,000 coins",
+         unlocked = (PlayerData.coins or 0) >= 10000, icon = "💰"},
+        {name = "Wealthy", desc = "Have 100,000 coins",
+         unlocked = (PlayerData.coins or 0) >= 100000, icon = "💎"},
+        {name = "Landowner", desc = "Own your first property",
+         unlocked = properties >= 1, icon = "🏠"},
+        {name = "Magnate", desc = "Own 10 properties",
+         unlocked = properties >= 10, icon = "🏰"},
+        {name = "Apprentice Smith", desc = "Reach 100 forging XP",
+         unlocked = (skills.forging or 0) >= 100, icon = "⚒"},
+        {name = "Arcane Scholar", desc = "Reach 100 wizardry XP",
+         unlocked = (skills.wizardry or 0) >= 100, icon = "🔮"},
+        {name = "Master Alchemist", desc = "Reach 100 alchemy XP",
+         unlocked = (skills.alchemy or 0) >= 100, icon = "⚗"},
+        {name = "Artisan", desc = "Craft 50 items",
+         unlocked = #(PlayerData.craftedItems or {}) >= 50, icon = "🔨"},
+        {name = "Cartographer", desc = "Discover 25 locations",
+         unlocked = countKeys(PlayerData.discoveredLocations) >= 25, icon = "🗺"},
+        {name = "Dragonslayer", desc = "Defeat a dragon",
+         unlocked = unlockedFlags.defeat_dragon == true, icon = "🐉"},
+        {name = "Ascendant", desc = "Ascend for the first time",
+         unlocked = (PlayerData.ascensionCount or 0) >= 1, icon = "⭐"},
+    }
 end
+
 
 function StatsPage.init()
     ensureStats()

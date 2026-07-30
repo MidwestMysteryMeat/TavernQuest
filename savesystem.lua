@@ -11,38 +11,12 @@ SaveSystem.activeSlot = 1
 -- Default player data template
 SaveSystem.defaultPlayerData = {
     coins = 100,
-    crystals = 10,  -- New currency for fusion upgrades
-    fusionUpgrades = {
-        splinterChance = 0,    -- +2% per level (bonus random card)
-        mirrorChance = 0,      -- +1% per level (duplicate result)
-        bonusChips = 0,        -- +5 chips per level
-        bonusMult = 0,         -- +1 mult per level
-        catalystChance = 0,    -- +1% per level (skip rarity)
-        prismaticChance = 0,   -- +1% per level (add mutation)
-        echoChance = 0,        -- +1% per level (return source card)
-        fortifyChance = 0,     -- +2% per level (extra fusion slot)
-    },
-    collection = {},
-    decks = {},
-    currentDeck = nil,
-    wins = 0,
-    losses = 0,
-    totalGamesPlayed = 0,
-    highestRound = 0,
-    equippedJokers = {},
-    unlockedModes = {"standard"},
+    crystals = 10,      -- Secondary currency, spent on upgrades and rare goods
     settings = {
         musicVolume = 0.3,
         sfxVolume = 0.5,
         fullscreen = true,
         musicMuted = false
-    },
-    stats = {
-        totalChipsScored = 0,
-        totalMultEarned = 0,
-        handsPlayed = 0,
-        bestHand = "",
-        bestHandScore = 0
     },
     -- Crafting system
     craftingSkills = {
@@ -52,24 +26,10 @@ SaveSystem.defaultPlayerData = {
     },
     craftedItems = {},   -- List of crafted items with rarity/quality
     marketListings = {}, -- Items listed for sale on market
-    -- Cafe/Wage mode
-    cafeUpgrades = {
-        traySize = 0,
-        prepSpeed = 0,
-        patience = 0,
-        tips = 0,
-        autoChef = 0,
-        multiPrep = 0,
-        reputation = 0,
-        quality = 0,
-        ambiance = 0,
-    },
-    cafeEmployees = {},  -- List of hired cafe employees
-    cafeDay = 1,         -- Current day in cafe mode
     -- Passive income system
     passiveIncome = 0,         -- Gold per second from all sources
     lastPassiveUpdate = 0,     -- Timestamp of last passive income update
-    passiveIncomeBreakdown = {}, -- Sources breakdown {stockMarket = 0, etc}
+    passiveIncomeBreakdown = {}, -- Per-source breakdown, keyed by property id
     -- Property ownership system
     properties = {
         townProperties = {},   -- Owned businesses and homes in towns
@@ -116,8 +76,6 @@ SaveSystem.defaultPlayerData = {
     createdAt = 0,
     lastPlayed = 0,
     -- Additional game modes
-    endlessRun = false,        -- Whether endless mode is active
-    favoriteModes = {},        -- List of favorite game modes {modeId = true}
     progression = {}           -- General progression tracking for various systems
 }
 
@@ -158,20 +116,36 @@ function SaveSystem.getSlotInfo(slot)
         setfenv(chunk, sandbox)
         local ok, data = pcall(chunk)
         if ok and data then
+            -- The RPG character lives under textRPG; a slot can exist before one is made.
+            local character = data.textRPG and data.textRPG.player
             return {
                 exists = true,
                 slot = slot,
-                wins = data.wins or 0,
-                losses = data.losses or 0,
+                characterName = character and character.name or nil,
+                characterLevel = character and character.level or nil,
+                characterClass = character and character.class and character.class.id or nil,
                 coins = data.coins or 0,
                 lastPlayed = data.lastPlayed or 0,
-                totalGamesPlayed = data.totalGamesPlayed or 0
             }
         end
     end
 
     -- File exists but is corrupted
-    return {exists = true, slot = slot, corrupted = true, wins = 0, losses = 0, coins = 0}
+    return {exists = true, slot = slot, corrupted = true, coins = 0}
+end
+
+--- One-line summary of a slot for the save/load UI.
+function SaveSystem.describeSlot(slot)
+    if not slot or not slot.exists then return "Empty" end
+    if slot.corrupted then return "CORRUPTED" end
+
+    if slot.characterName then
+        return string.format("%s  -  Level %d %s",
+            slot.characterName,
+            slot.characterLevel or 1,
+            slot.characterClass and slot.characterClass:gsub("^%l", string.upper) or "Adventurer")
+    end
+    return "No character yet"
 end
 
 -- Load data from a specific slot

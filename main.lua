@@ -1,23 +1,11 @@
 -- TAVERN QUEST: A Tale of Tavern Times
 -- Main entry point
 
--- Game states (game.lua must load before menu.lua because StoryMode is merged into game.lua
--- and menu.lua does require("storymode") which is satisfied via package.loaded)
-local Game = require("game")
-local StoryMode = require("storymode")
 local Menu = require("menu")
-local DeckBuilder = require("deckbuilder")
-local Collection = require("collection")
-local LootBox = require("lootbox")
 local SaveSystem = require("savesystem")
 local Credits = require("credits")
-local CafeGame = require("cafegame")
-local StockMarket = require("stockmarket")
-local TradingCards = require("tradingcards")
 local StatsPage = require("statspage")
 local TextRPG = require("textrpg")
-local PetSim = require("petsim")
-local EndlessMode = require("endlessmode")
 local Lore = require("lore")
 local Tutorial = require("tutorial_menu")
 local Fishing = require("fishing")
@@ -29,8 +17,6 @@ local Progression = require("progression")
 local Backpack = require("backpack")
 local PauseMenu = require("pausemenu")
 local Cutscenes = require("cutscenes")
-local PrisonEscape = require("prison_escape")
-local MapEditor = require("map_editor")
 local UI = require("ui")
 local InteractiveTutorial = require("interactivetutorial")
 local KnowledgeCenter = require("knowledgecenter")
@@ -45,28 +31,16 @@ local TileQuadMaps = require("tile_quad_maps")
 -- State module registry for table-driven dispatch
 local stateModules = {
     menu = Menu,
-    game = Game,
-    deckbuilder = DeckBuilder,
-    collection = Collection,
-    storymode = StoryMode,
-    lootbox = LootBox,
     credits = Credits,
-    cafegame = CafeGame,
-    stockmarket = StockMarket,
-    tradingcards = TradingCards,
     statspage = StatsPage,
     textrpg = TextRPG,
-    petsim = PetSim,
-    endlessmode = EndlessMode,
     lore = Lore,
     tutorial = Tutorial,
     fishing = Fishing,
     forge = Forge,
     hunting = Hunting,
-    prison_escape = PrisonEscape,
     wizardtower = WizardTower,
     alchemist = Alchemist,
-    map_editor = MapEditor,
 }
 
 -- FPS Counter System (toggle with F3)
@@ -342,16 +316,10 @@ end
 
 -- Global state
 GameState = {
-    current = "menu",  -- menu, game, deckbuilder, collection, storymode, lootbox, credits, cafegame, tutorial, fishing, forge, hunting, textrpg, etc.
+    -- Valid values are exactly the keys of `stateModules` above.
+    current = "menu",
     player = nil,
-    opponent = nil,
-    isHost = false,
-    isAI = false,
-    isStoryMode = false,
-    network = nil,
-    playerUID = nil  -- Unique player ID for multiplayer
 }
-previousState = nil
 
 -- Save/Load player data functions
 function savePlayerData()
@@ -368,16 +336,6 @@ function loadPlayerData()
             sfxVolume = 0.5,
             fullscreen = true,
             musicMuted = false
-        }
-    end
-
-    if not PlayerData.stats then
-        PlayerData.stats = {
-            totalChipsScored = 0,
-            totalMultEarned = 0,
-            handsPlayed = 0,
-            bestHand = "",
-            bestHandScore = 0
         }
     end
 
@@ -408,6 +366,13 @@ function love.load()
     -- Set random seed
     math.randomseed(os.time())
 
+    -- `love . --test` runs the headless suite instead of the game.
+    if TEST_MODE then
+        local ok = require("tests.run").run()
+        love.event.quit(ok and 0 or 1)
+        return
+    end
+
     -- Initialize save system first
     SaveSystem.init()
 
@@ -423,14 +388,7 @@ function love.load()
 
     -- Initialize all game modules
     Menu.init()
-    Game.init()
-    DeckBuilder.init()
-    Collection.init()
-    StoryMode.init()
-    LootBox.init()
     Credits.init()
-    CafeGame.init()
-    StockMarket.init()
     Progression.init()
     Backpack.init()
 
@@ -678,9 +636,13 @@ function love.textinput(text)
     end
 end
 
+function love.resize()
+    -- The menu lays its buttons out against the window size, so it has to be rebuilt.
+    Menu.layout()
+end
+
 -- State management
 function changeState(newState)
-    previousState = GameState.current
     GameState.current = newState
 
     -- Initialize new state

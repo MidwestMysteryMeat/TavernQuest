@@ -1347,11 +1347,6 @@ function M.mousepressed(mx, my, button)
                     Hunting.init(true)
                     GameState.current = "hunting"
                     log("You enter your hunter's lodge...", {0.5, 0.4, 0.3})
-                elseif action == "market" then
-                    local StockMarket = require("stockmarket")
-                    StockMarket.init(true)
-                    GameState.current = "stockmarket"
-                    log("You enter your trading post...", {0.4, 0.5, 0.5})
                 end
                 return
             end
@@ -3127,19 +3122,7 @@ function M.mousepressed(mx, my, button)
         if state.tavernButtons then
             for _, btn in ipairs(state.tavernButtons) do
                 if not btn.disabled and mx >= btn.x and mx <= btn.x + btn.w and my >= btn.y and my <= btn.y + btn.h then
-                    if btn.id == "work" then
-                        -- Launch cafe game
-                        local townId = state.world.currentTown and state.world.currentTown.id or "havenbrook"
-
-                        PlayerData.currentBuildingOwned = PropertySystem.ownsProperty(townId, "tavern")
-                        PlayerData.currentBuildingTownId = townId
-                        PlayerData.currentBuildingId = "tavern"
-
-                        local CafeGame = require("cafegame")
-                        CafeGame.init()
-                        GameState.current = "cafegame"
-                        log("Time to serve some customers!", {0.6, 0.5, 0.5})
-                    elseif btn.id == "talk" then
+                    if btn.id == "talk" then
                         -- Go to NPC list
                         state.phase = "npc_list"
                     elseif btn.id == "rest" then
@@ -3157,23 +3140,6 @@ function M.mousepressed(mx, my, button)
                         else
                             log("Not enough gold for a room (need 20g)", {0.8, 0.4, 0.4})
                         end
-                    elseif btn.id == "poker" then
-                        local TradingCards = require("tradingcards")
-                        TradingCards.init()
-                        GameState.current = "tradingcards"
-                        log("Time for a game of cards!", {0.5, 0.5, 0.8})
-                    elseif btn.id == "collection" then
-                        local Collection = require("collection")
-                        Collection.init()
-                        GameState.current = "collection"
-                    elseif btn.id == "lootboxes" then
-                        local LootBox = require("lootbox")
-                        LootBox.init()
-                        GameState.current = "lootbox"
-                    elseif btn.id == "deckeditor" then
-                        local DeckBuilder = require("deckbuilder")
-                        DeckBuilder.init()
-                        GameState.current = "deckbuilder"
                     end
                     return
                 end
@@ -3407,16 +3373,6 @@ function M.mousepressed(mx, my, button)
                         Hunting.init()
                         GameState.current = "hunting"
                         log("You enter the hunter's lodge...", {0.5, 0.4, 0.3})
-                    elseif option.action == "stockmarket" then
-                        -- Launch trading post
-                        local townId = state.world.currentTown and state.world.currentTown.id or "havenbrook"
-                        PlayerData.currentBuildingOwned = PropertySystem.ownsProperty(townId, "market")
-                        PlayerData.currentBuildingTownId = townId
-                        PlayerData.currentBuildingId = "market"
-                        local StockMarket = require("stockmarket")
-                        StockMarket.init()
-                        GameState.current = "stockmarket"
-                        log("You enter the bustling trading post...", {0.4, 0.5, 0.5})
                     elseif option.action == "water" then
                         -- Draw water from well
                         local healAmt = math.floor(state.player.maxHP * 0.1)
@@ -3548,7 +3504,6 @@ function M.mousepressed(mx, my, button)
                 log("Quest reward: " .. quest.rewardGold .. "g, " .. quest.rewardXP .. "xp", {0.9, 0.7, 0.2})
                 table.remove(state.player.activeQuests, i)
                 state.stats.questsCompleted = state.stats.questsCompleted + 1
-                PlayerData.wins = PlayerData.wins + 1
                 savePlayerData()
                 return
             end

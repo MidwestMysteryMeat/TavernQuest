@@ -1598,17 +1598,6 @@ M.enterTownBuilding = function(building)
         state.phase = "quest_log"
     elseif action == "job_board" then
         state.phase = "job_board"
-    elseif action == "stockmarket" then
-        -- Check ownership for employee hiring
-        local PropertySystem = require("propertysystem")
-        local townId = state.world.currentTown and state.world.currentTown.id or "havenbrook"
-        PlayerData.currentBuildingOwned = PropertySystem.ownsProperty(townId, "market")
-        PlayerData.currentBuildingTownId = townId
-        PlayerData.currentBuildingId = "market"
-        local StockMarket = require("stockmarket")
-        StockMarket.init()
-        GameState.current = "stockmarket"
-        log("You enter the bustling trading post...", {0.4, 0.5, 0.5})
     elseif action == "npc_list" then
         state.phase = "npc_list"
     elseif action == "tavern_interior" then

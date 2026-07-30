@@ -1268,10 +1268,6 @@ function M.register(s, f)
             F[name] = M[name]
         end
     end
-
-    -- Also register VampireInfiltration into package.loaded for backward compatibility
-    -- (any code doing require("vampireinfiltration") gets this table)
-    package.loaded["vampireinfiltration"] = VampireInfiltration
 end
 
 return M

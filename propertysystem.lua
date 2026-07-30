@@ -2362,8 +2362,8 @@ function PropertySystem.isTileEmpty(grid, x, y)
     return SettlementExpansion.isTileEmpty(grid, x, y)
 end
 
-function PropertySystem.validateBuildingPlacement(grid, x, y, footprint, buildingType)
-    return SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, footprint, buildingType)
+function PropertySystem.validateBuildingPlacement(grid, x, y, footprint, buildingType, claimKey)
+    return SettlementExpansion.validateBuildingPlacement(state, PropertySystem, grid, x, y, footprint, buildingType, claimKey)
 end
 
 function PropertySystem.placeBuilding(claimKey, buildingType, x, y, tier)

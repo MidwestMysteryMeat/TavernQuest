@@ -214,7 +214,6 @@ local NPC_TEMPLATES = {
         dialogue = {
             greeting = "Looking to trade goods or stocks?",
             options = {
-                {text = "Trading post", action = "stockmarket"},
                 {text = "Chat", action = "chat", responses = {
                     "Buy low, sell high - that's the secret!",
                     "Markets fluctuate based on supply and demand.",
@@ -2156,15 +2155,19 @@ M.getNPCQuestIndicator = function(npc)
         end
     end
 
-    -- Check if NPC has available quests
+    -- Check if NPC has available quests. Any quest the player qualifies for wins
+    -- over one they don't, so the whole list has to be scanned.
     local availableQuests = F.generateNPCQuests(npc)
+    local hasLockedQuest = false
     for _, questInfo in ipairs(availableQuests) do
-        local meetsReq, reason = F.checkQuestRequirements(questInfo, npc.id)
-        if meetsReq then
+        if F.checkQuestRequirements(questInfo, npc.id) then
             return "❗" -- Quest available
-        else
-            return "?" -- Quest available but requirements not met
         end
+        hasLockedQuest = true
+    end
+
+    if hasLockedQuest then
+        return "?" -- Quest exists but requirements not met
     end
 
     return nil -- No quests

@@ -782,9 +782,8 @@ function PauseMenu.drawSaveLoad(screenW, screenH, mode)
                 love.graphics.setColor(UI.theme.colors.danger)
                 love.graphics.print("CORRUPTED", slotX + 15, slotY + 35)
             else
-                love.graphics.print(string.format("Wins: %d | Losses: %d | Coins: %d",
-                    slot.wins or 0, slot.losses or 0, slot.coins or 0), slotX + 15, slotY + 35)
-                love.graphics.print(string.format("Games: %d", slot.totalGamesPlayed or 0), slotX + 15, slotY + 55)
+                love.graphics.print(SaveSystem.describeSlot(slot), slotX + 15, slotY + 35)
+                love.graphics.print(string.format("Coins: %d", slot.coins or 0), slotX + 15, slotY + 55)
             end
 
             -- Draw action button

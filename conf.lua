@@ -1,5 +1,12 @@
 -- LÖVE configuration file
 
+--- True when the game was started as `love . --test`.
+-- Exposed as a global so main.lua can branch on it without re-parsing argv.
+TEST_MODE = false
+for _, value in ipairs(arg or {}) do
+    if value == "--test" then TEST_MODE = true end
+end
+
 function love.conf(t)
     t.identity = "taverntimes"         -- Save directory name
     t.version = "11.4"                 -- LÖVE version
@@ -13,7 +20,9 @@ function love.conf(t)
     t.window.resizable = true
     t.window.minwidth = 1280
     t.window.minheight = 720
-    t.window.fullscreen = true
+    -- Tests need a graphics context (modules build fonts at load time) but no
+    -- fullscreen takeover.
+    t.window.fullscreen = not TEST_MODE
     t.window.fullscreentype = "desktop"
     t.window.vsync = 1
     t.window.msaa = 0

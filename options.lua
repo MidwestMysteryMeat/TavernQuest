@@ -241,9 +241,8 @@ function Options.drawSaveMenu()
                 love.graphics.print("This save file has invalid data", slotX + 15, slotY + 55)
             else
                 love.graphics.setColor(colors.textDim)
-                love.graphics.print(string.format("Wins: %d  |  Losses: %d  |  Coins: %d",
-                    slot.wins, slot.losses, slot.coins), slotX + 15, slotY + 35)
-                love.graphics.print(string.format("Games Played: %d", slot.totalGamesPlayed or 0),
+                love.graphics.print(SaveSystem.describeSlot(slot), slotX + 15, slotY + 35)
+                love.graphics.print(string.format("Coins: %d", slot.coins or 0),
                     slotX + 15, slotY + 55)
             end
 

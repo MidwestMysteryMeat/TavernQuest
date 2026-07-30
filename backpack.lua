@@ -1771,7 +1771,6 @@ function Backpack.draw()
     if not uiState.isOpen then return end
 
     Backpack.init()
-    local UIAssets = require("uiassets")
     local screenW, screenH = love.graphics.getDimensions()
     local mx, my = love.mouse.getPosition()
 

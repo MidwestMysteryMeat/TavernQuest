@@ -5628,13 +5628,8 @@ M.drawTavernInterior = function(x, y, w, h, mx, my)
     local centerX = x + w/2
 
     local buttons = {
-        {id = "work", label = "Work Shift", icon = "☕", desc = "Serve customers at the cafe", gridX = 0, gridY = 0},
-        {id = "talk", label = "Talk to NPCs", icon = "💬", desc = "Chat with townsfolk", gridX = 1, gridY = 0},
-        {id = "rest", label = "Rent Room", icon = "🛏️", desc = "Rest & recover (20g)", gridX = 0, gridY = 1},
-        {id = "poker", label = "Play Poker", icon = "🃏", desc = "Play cards against NPCs", gridX = 0, gridY = 2},
-        {id = "collection", label = "Collection", icon = "📚", desc = "View your card collection", gridX = 1, gridY = 2},
-        {id = "lootboxes", label = "Loot Boxes", icon = "🎁", desc = "Open card packs", gridX = 0, gridY = 3},
-        {id = "deckeditor", label = "Deck Editor", icon = "✏️", desc = "Build & edit your decks", gridX = 1, gridY = 3},
+        {id = "talk", label = "Talk to NPCs", icon = "💬", desc = "Chat with townsfolk", gridX = 0, gridY = 0},
+        {id = "rest", label = "Rent Room", icon = "🛏️", desc = "Rest & recover (20g)", gridX = 1, gridY = 0},
     }
 
     for _, btn in ipairs(buttons) do

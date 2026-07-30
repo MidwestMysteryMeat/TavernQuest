@@ -1,10 +1,61 @@
 ================================================================================
                          TAVERN TIMES - CHANGELOG
-                            Version A.02
+                            Version A.03
 ================================================================================
 
-Current Version: A.02
-Last Updated: January 25, 2026
+Current Version: A.03
+Last Updated: July 30, 2026
+
+================================================================================
+                    VERSION A.03  -  "redesign/slim"
+================================================================================
+
+Scope cut and engineering pass. The game is now one RPG instead of an RPG plus
+an arcade cabinet. 147 Lua files -> 81; 162,265 lines -> ~101,500.
+
+REMOVED (dead code, unreachable from main.lua):
+  - editor_suite/ (30 files, 23k lines, standalone app wired to nothing)
+  - lore_books, loremanager, npcmanager, charactercreator, charactercustomizer,
+    characterpresets, combat_ui_simple, textrpgutils
+  - 6 deprecated compatibility shims (assetconfig, assetloader, assetscanner,
+    tutorial, gamemodes, vampireinfiltration)
+
+REMOVED (scope):
+  - poker / jokers / deck builder / loot boxes / endless mode / card collection
+    / trading cards / card AI / poker hands / card renderer / card tooltip
+  - stock market, pet sim, cafe minigame, in-game map editor
+  - the "Game Modes" arcade browser, favourites panel, and matchmaking stubs
+  - dev-mode cheat with a hardcoded password (it also gated the Lore screen)
+
+CHANGED:
+  - menu.lua rewritten: 1,505 lines -> ~390, no arcade layer
+  - save schema stripped of card-game and cafe fields
+  - save slots now show character name / level / class instead of poker W/L
+  - stats page rebuilt around General / Crafting / Achievements
+  - prison_escape unregistered as a game state (it is an rpg_core subsystem)
+  - docs: 59 files -> 19; the 16-file worldbuilding corpus moved to docs/lore/,
+    AI-generated "implementation complete" reports removed
+  - assets: dropped build tooling and triplicated pack docs; all attribution
+    and licence files retained
+
+ADDED:
+  - tests/run.lua - headless suite, `love . --test`, 78 assertions, exit code
+  - .luacheckrc - static analysis config; `luacheck .` reports 0 errors
+  - docs/ARCHITECTURE.md - state machine, save schema, legacy patterns
+  - docs/BUGS_FOUND.md - the 10 bugs below, with root cause and main status
+  - love.resize hook so the menu re-lays out on window resize
+
+FIXED (all 10 were pre-existing and are still present on main):
+  - lore.lua       CRASH  - 7 tab renderers called before declaration
+  - fishing.lua    CRASH  - 3 overlay renderers called before declaration
+  - hunting.lua    CRASH  - call to non-existent love.graphics.UI.fonts.get
+  - rpg_travel     SILENT - `not x == y` precedence; serial killers never spawned
+  - rpg_npc        SILENT - quest-marker loop returned on the first iteration
+  - settlement_expansion SILENT - undefined `claim`; building cap never enforced
+  - assetpipeline  LATENT - load-bearing variable shadowing + mismatched path
+  - interactivetutorial SILENT - guards on modules that were never required
+  - rpg_data       SILENT - 5 duplicate keys in portraitMappings
+  - stealth_system COSMETIC - negated equality
 
 ================================================================================
                               VERSION A.02
