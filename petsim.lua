@@ -1307,6 +1307,10 @@ function PetSim.draw()
     UIAssets.drawTooltip()
 end
 
+-- Forward declarations: defined after the view drawing code, but the
+-- habitat buttons' onClick closures below need to capture these locals.
+local feedAllPets, playWithAllPets, sleepAllPets
+
 -- Draw the habitat view with animated pets
 function drawHabitatView(screenW, screenH, contentY, contentH, mx, my)
     -- Habitat bounds (no green box - background image shows through)
@@ -2113,8 +2117,9 @@ function drawPetDetails(screenW, screenH, contentY, contentH, mx, my)
     -- Detailed pet view (for future expansion)
 end
 
--- Helper functions for UI button callbacks
-local function feedAllPets()
+-- Helper functions for UI button callbacks (locals declared above
+-- drawHabitatView so its onClick closures share these definitions)
+function feedAllPets()
     local fedAny = false
     for _, pet in ipairs(state.pets) do
         for j, inv in ipairs(state.inventory.food) do
@@ -2153,7 +2158,7 @@ local function feedAllPets()
     end
 end
 
-local function playWithAllPets()
+function playWithAllPets()
     for _, pet in ipairs(state.pets) do
         if not pet.isSleeping then
             pet.happiness = math.min(100, pet.happiness + 15)
@@ -2171,7 +2176,7 @@ local function playWithAllPets()
     })
 end
 
-local function sleepAllPets()
+function sleepAllPets()
     for _, pet in ipairs(state.pets) do
         if not pet.isSleeping then
             putToSleep(pet)
